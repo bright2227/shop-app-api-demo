@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:5
+    command: redis-server /etc/redis/redis.conf 
+    volumes:
+    - api_redis_vol:/data 
+    - ./compose/redis/redis.conf:/etc/redis/redis.conf 
+    ports:
+    - "6379:6379"
+    restart: always 
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=api 
+      - MYSQL_USER=dbuser 
+      - MYSQL_PASSWORD=password 
+    volumes:
+      - api_db_vol:/var/lib/mysql:rw 
+      - ./compose/mysql/conf/my.cnf:/etc/mysql/my.conf 
+      - ./compose/mysql/init:/docker-entrypoint-initdb.d/ 
+    ports:
+      - "3306:3306" 
+    restart: always
+
+  web:
+    build: ./api
+    expose:
+      - "8000"
+    volumes:
+      - ./api:/var/www/html/api
+      - api_media_vol:/var/www/html/api/media 
+      - ./compose/uwsgi:/tmp 
+    depends_on: 
+      - redis
+    environment:
+      - DEBUG=False
+    restart: always
+    tty: true
+    stdin_open: true
+
+  nginx:
+    build: ./compose/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./api/static:/usr/share/nginx/html/static
+      - ./compose/nginx/ssl:/usr/share/nginx/ssl 
+      - ./compose/nginx/log:/var/log/nginx 
+      - api_media_vol:/usr/share/nginx/html/media 
+    depends_on:
+      - web
+    restart: always
+
+volumes: 
+  api_db_vol: 
+  api_redis_vol: 
+  api_media_vol: 
+
+# volume like api_db_vol seems have cache, if api_vol:./api, files with same name
+#  won't change after delete and rebuild container
+  

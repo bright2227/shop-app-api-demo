@@ -1,0 +1,2 @@
+GRANT ALL PRIVILEGES ON api.* TO dbuser@"%" IDENTIFIED BY "password";
+FLUSH PRIVILEGES;
