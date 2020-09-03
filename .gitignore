@@ -1,6 +1,14 @@
 # the important key
 secrets.py
 
-
 #pycache
-*/__pycache__
+*/__pycache__/*
+*.pyc
+
+# uwsgi ini
+--ini
+
+#static files
+api/static/
+api/media/
+db.sqlite3
