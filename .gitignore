@@ -1,3 +1,6 @@
 # the important key
 secrets.py
 
+
+#pycache
+*/__pycache__
