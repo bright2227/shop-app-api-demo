@@ -1,4 +1,4 @@
-# change the key and files me to secret when deploying
+# change the key and files name to secret when deploying
 SECRET_KEY = "rj3vhyKiDRNmth75sxJemvOuTy1Hy0ogeKgS9JP8Gp7dGDctfSMUuOt5QbSpsS9xAlvBMTXW3Z6VTODvvFcV3TmtrZUbGkHBcs8I"
 
 DATABASE_USER = "dbuser"

@@ -36,8 +36,8 @@ CACHE_TTL = 60 * 1
 
 
 # celery
-broker_url = "redis://redis:6379/2"
-result_backend = "redis://redis:6379/3"
+broker_url = f"redis://:{secrets.CACHES_PASSWORD}@redis:6379/2"
+result_backend = f"redis://:{secrets.CACHES_PASSWORD}@redis:6379/3"
 accept_content = ["json"]
 task_serializer = "json"
 result_serializer = "json"

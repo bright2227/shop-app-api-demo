@@ -17,11 +17,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-DEBUG = False
-if DEBUG:
-    from api.deploy.dev import *
-else:
+# debug_mode from docker-compose is string, env file will prepare later
+print(os.environ.get('debug_mode'))
+if os.environ.get('debug_mode') in ['False', 'false']:
     from api.deploy.prod import *
+    DEBUG = False    
+else:
+    from api.deploy.dev import *
+    DEBUG = True
 
 
 # Application definition

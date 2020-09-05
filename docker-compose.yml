@@ -37,7 +37,8 @@ services:
     depends_on: 
       - redis
     environment:
-      - DEBUG=False
+      - debug_mode=False
+      - DJANGO_SETTINGS_MODULE=api.settings
     restart: always
     tty: true
     stdin_open: true
