@@ -17,8 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# debug_mode from docker-compose is string, env file will prepare later
-print(os.environ.get('debug_mode'))
+# debug_mode from docker-compose is string, env file will be prepared later
 if os.environ.get('debug_mode') in ['False', 'false']:
     from api.deploy.prod import *
     DEBUG = False    
@@ -39,11 +38,11 @@ INSTALLED_APPS = [
     # 'django_extensions',
     'django_filters',
     'rest_framework',
-    'drf_yasg',]
-    # 'core',
-    # 'order',
-    # 'product',
-    # 'user']
+    'drf_yasg',
+    'product',
+    'core',
+    'order',
+    'user']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -11,4 +11,9 @@ secrets.py
 #static files
 api/static/
 api/media/
-db.sqlite3
+
+# exclude everything
+api/core/migrations/*
+
+# exception to the rule
+!api/core/migrations/__init__.py
