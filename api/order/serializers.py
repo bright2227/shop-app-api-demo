@@ -5,12 +5,17 @@ from order.tasks import send_mail_task
 from django.http import HttpResponse
 # from django.db.models import Prefetch
 
+
 class OrderitemSerializer(serializers.ModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(
+            view_name='shop:orderitem-detail',
+            lookup_field='pk') 
 
     class Meta:
         model = Orderitem
-        fields = ('id', 'item', 'quantity')
-        read_only_fields = ('id', )
+        fields = ('id', 'item', 'quantity', 'url')
+        read_only_fields = ('id', 'item', 'url')
 
     def validate_item(self, attr):
         # attr is an product objects            
@@ -43,15 +48,14 @@ class OrderCreateSerializer(serializers.Serializer):
         # after selected_related, orderitem.values('id'), orderitem.values_list('id'), orderitem.get(id=id)  
         # still request data from sql
 
-        # still trigger user foreign key in order model even using 'defer', 'only'
-        # pref = Prefetch('order_items', queryset=Orderitem.objects.all().select_related('item'))
-        # order = Order.objects.prefetch_related(pref).get(user=self.context['request'].user, state='CR')
-        
         order = Order.objects.get(user=self.context['request'].user, state='CR')
         orderitem = Orderitem.objects.filter(order=order).select_related('item')
         if not orderitem:
             raise serializers.ValidationError("nothing in the cart") 
 
+        # still trigger user foreign key in order model even using 'defer', 'only'
+        # pref = Prefetch('order_items', queryset=Orderitem.objects.all().select_related('item'))
+        # order = Order.objects.prefetch_related(pref).get(user=self.context['request'].user, state='CR')
             
         out_of_stock, too_many_orderitem, reciept = '', '', ''
         validated_data['total'] =  0
@@ -93,9 +97,14 @@ class OrderCreateSerializer(serializers.Serializer):
 
 class OrderSerializer(serializers.ModelSerializer):
 
+    url = serializers.HyperlinkedIdentityField(
+            view_name='shop:order-detail',
+            lookup_field='pk')  
+            
     orderitem_set = OrderitemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
-        fields = ('id', 'address', 'total', 'orderitem_set', 'state')
-        read_only_fields = ('id', 'total', 'orderitem_set', 'state') 
+        fields = ('id', 'address', 'total', 'orderitem_set', 'state', 'url')
+        read_only_fields = ('id', 'total', 'orderitem_set', 'state', 'url') 
+        

@@ -18,13 +18,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # debug_mode from docker-compose is string, env file will be prepared later
-if os.environ.get('debug_mode') in ['False', 'false']:
-    from api.deploy.prod import *
-    DEBUG = False    
-else:
+DEBUG = bool(int(os.environ.get('debug_mode')))
+if DEBUG:
     from api.deploy.dev import *
-    DEBUG = True
-
+else:
+    from api.deploy.prod import *
+    
 
 # Application definition
 INSTALLED_APPS = [
@@ -75,15 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join( BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -148,6 +138,7 @@ SWAGGER_SETTINGS = {
             'name': 'Authorization',
             'in': 'header'
         }
-    }
+    },
+    'USE_SESSION_AUTH': False
 }
 

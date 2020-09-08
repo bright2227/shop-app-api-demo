@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model 
+from core.models import Order
 
 
 class UserSignInSerializer(serializers.ModelSerializer):
@@ -15,9 +16,12 @@ class UserSignInSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 #         User() = get_user_model()
         validated_data.pop('password_check')
-        user = get_user_model()(**validated_data)  # it is instance, don't trigger the sql
+        # it is instance, doesn't trigger the sql
+        user = get_user_model()(**validated_data)  
         user.set_password(validated_data['password'])
         user.save()
+        # create a order for cart
+        Order.objects.create(user=user, state='CR')
         return user
     
     def update(self, instance, validated_data):

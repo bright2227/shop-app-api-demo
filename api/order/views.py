@@ -13,6 +13,9 @@ class OrderItemViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+        # queryset just for schema generation metadata
+            return Orderitem.objects.none()
         cart = Order.objects.get(user=self.request.user, state='CR')
         queryset = self.queryset.filter(order=cart)
         return queryset
@@ -24,26 +27,29 @@ class OrderItemViewSet(viewsets.ModelViewSet):
         else:
             serializer.save()
             
-    @swagger_auto_schema(operation_description='List all orderitem in cart stage.')
+    @swagger_auto_schema(operation_summary='列出在購物車內的所有物品資料',
+        operation_description='')
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     
-    @swagger_auto_schema(operation_description='get certain orderitem in cart stage.')    
+    @swagger_auto_schema(operation_summary='讀取購物車內的特定物品資料',
+        operation_description='')    
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
     
-    @swagger_auto_schema(operation_description='The creating repeat orderitem is not allowed.\
-        You can change quantity by update original item.') 
+    @swagger_auto_schema(operation_summary='添加物品進入購物車內',
+        operation_description='無法重複添加相同物品，若要更改數量請用update。\n \
+        如果購買數量高過庫存，則無法購買。') 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
     
-    @swagger_auto_schema(operation_description='You can change quantity of orderitem in cart stage.\
-        if you want to get new item, please use create method.') 
+    @swagger_auto_schema(operation_summary='更改購物車內的特定物品數量',
+        operation_description='如果更改後購買數量高過庫存，則無法購買。') 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @swagger_auto_schema(operation_description='You can change quantity of orderitem in cart stage.\
-        if you want to get new item, please use create method.')     
+    @swagger_auto_schema(operation_summary='更改購物車內的特定物品數量',
+        operation_description='如果更改後購買數量高過庫存，則無法購買。')     
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
@@ -57,8 +63,17 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self): 
-        queryset = self.queryset.filter(user=self.request.user)
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+        # queryset just for schema generation metadata
+            return Order.objects.none() 
+
+        if self.action in ("update", "destroy"):
+            queryset = self.queryset.filter(user=self.request.user, state='PR')
+            if not queryset:
+                raise ValidationError('There is no order in process state')
+        else:    
+            queryset = self.queryset.filter(user=self.request.user)
         return queryset 
 
     def get_serializer_class(self):        

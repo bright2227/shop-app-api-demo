@@ -27,7 +27,7 @@ services:
     restart: always
 
   web:
-    build: ./api
+    build: .
     expose:
       - "8000"
     volumes:
@@ -37,7 +37,7 @@ services:
     depends_on: 
       - redis
     environment:
-      - debug_mode=False
+      - debug_mode=0
       - DJANGO_SETTINGS_MODULE=api.settings
     restart: always
     tty: true

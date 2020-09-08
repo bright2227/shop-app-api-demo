@@ -9,8 +9,8 @@ secrets.py
 --ini
 
 #static files
-api/static/
-api/media/
+api/static/*
+# api/media/
 
 # exclude everything
 api/core/migrations/*

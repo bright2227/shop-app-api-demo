@@ -26,6 +26,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"product_{n}")
     price = factory.LazyAttribute(lambda x: random.randrange(2, 10))
     quantity = factory.LazyAttribute(lambda x: random.randrange(200, 901))
+    image = factory.Sequence(lambda n: f"/products/product{n}.png")
 
 # python manage.py shell
 # from core.factory import UserFactory, ProductFactory
