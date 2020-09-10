@@ -37,10 +37,13 @@ class ProductViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin,
             self.permission_classes = [AllowAny]
         return [permission() for permission in self.permission_classes]
 
-    @swagger_auto_schema(security=[])
+    @swagger_auto_schema(operation_summary='列出所有產品資料',
+    operation_description='可以用產品名、價格搜尋符合條件的產品',
+    security=[])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @swagger_auto_schema(security=[])    
+    @swagger_auto_schema(operation_summary='讀取特定產品資料',
+    security=[])    
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)

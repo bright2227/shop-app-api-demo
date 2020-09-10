@@ -54,7 +54,7 @@ class OrderItemViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
-    @swagger_auto_schema(operation_description='Delete orderitem in cart stage.')       
+    @swagger_auto_schema(operation_description='刪除購物車內的特定物品')       
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
     
@@ -82,19 +82,24 @@ class OrderViewSet(viewsets.ModelViewSet):
         else:
             return OrderSerializer
         
-    @swagger_auto_schema(operation_description='All your order. "CR" means in the cart stage, \
-        "FN" means the order has already created.')
+    @swagger_auto_schema(operation_summary='列出所有訂單資料，包括購物車',
+        operation_description='列出所有使用者曾經下訂的訂單. "CR"(Cart)代表未成單的購物車狀態,\
+        "PR"(Process) 代表正在處理的訂單狀態，使用者可改變訂單寄送資訊，或刪除訂單。 "FN" 代表已經 \
+        完成的歷史訂單，無法修改.')
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     
-    @swagger_auto_schema(operation_description='get certain order. for "CR" cart stage and "FN" \
-        finished stage.')    
+    @swagger_auto_schema(operation_summary='讀取特定訂單資料，包括購物車',
+        operation_description='列出所有使用者曾經下訂的訂單. "CR"(Cart)代表未成單的購物車狀態訂單,\
+        "PR"(Process) 代表正在處理狀態的訂單，使用者可改變訂單寄送資訊，或刪除訂單。 "FN" 代表已經 \
+        完成的歷史訂單，無法修改.')   
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
     
-    @swagger_auto_schema(operation_description="Take all orderitem in the cart into order. If item is out of stock \
-        or lower than the demanding quantity, You can't buy this item.\n  \
-        The receipt will be sent after order is successfully created.")
+    @swagger_auto_schema(operation_summary='將購物車內所有產物形成訂單',
+        operation_description='將未成單的購物車狀態訂單改為"PR"(Process)正在處理狀態的訂單，同時扣除 \
+        相對應的物品庫存數量。如果購物車內物品的訂購數量高過庫存物品數量，則無法形成訂單。成功形成訂單後，\
+        將透過信箱收到此次購買清單和總金額信件。')
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -102,19 +107,19 @@ class OrderViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response("Order is successfully created", status=status.HTTP_201_CREATED, headers=headers)
     
-    @swagger_auto_schema(operation_description="You are only allowed to change order information.\
-        But the information of orderitem can't be changed. If something wrong about \
-        your orderitem, you have to delete the order and add orderitem.") 
+    @swagger_auto_schema(operation_summary='修改在處理狀態的訂單', 
+        operation_description='使用者可以修改"PR"(Process)正在處理狀態的訂單，只能修改其通信資料，如寄件地址。\
+        或者刪除整個訂單。但無法修改訂單內部購買物品的數量和總類。') 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @swagger_auto_schema(operation_description="You are only allowed to change order information.\
-        But the information of orderitem can't be changed. If something wrong about \
-        your orderitem, you have to delete the order and add orderitem.")  
+    @swagger_auto_schema(operation_summary='修改在處理狀態的訂單', 
+        operation_description='使用者可以修改"PR"(Process)正在處理狀態的訂單，只能修改其通信資料，如寄件地址。\
+        或者刪除整個訂單。但無法修改訂單內部購買物品的數量和總類。')  
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
     
-    @swagger_auto_schema(operation_description=' Delete whole order.')       
+    @swagger_auto_schema(operation_summary='刪除在處理狀態的訂單', )       
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
