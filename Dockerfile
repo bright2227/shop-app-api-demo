@@ -9,6 +9,13 @@ ADD ./api /var/www/html/api
 RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
  
+# because github don't upload empty folder, static is not in the repo.
+# Docker-compose will generate static folder because it is written in volume.
+# This static folder is owned by root. Not newuser, chmod in dockerfile can 't
+# change it.
+# but media has product image, the repo has media folder.
+RUN mkdir -p /var/www/html/api/static
+
 # don't work as root  
 RUN useradd -ms /bin/bash newuser
 RUN chown -R newuser:newuser /var/www/html/
