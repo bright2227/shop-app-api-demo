@@ -14,13 +14,16 @@ RUN pip install -r requirements.txt
 # This static folder is owned by root. Not newuser, chmod in dockerfile can 't
 # change it.
 # but media has product image, the repo has media folder.
-RUN mkdir -p /var/www/html/api/static
+
+# didn't work, why?
+# RUN mkdir -p /var/www/html/api/static
 
 # don't work as root  
 RUN useradd -ms /bin/bash newuser
 RUN chown -R newuser:newuser /var/www/html/
 RUN chmod -R 755 /var/www/html/api
 USER newuser
+# RUN mkdir -p /var/www/html/api/static
 
 # 去除windows系统编辑文件中多余的\r回车空格
 RUN sed -i 's/\r//' ./start.sh
