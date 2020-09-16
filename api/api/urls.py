@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from product.views import ProductViewSet
-from user.views import UserViewSet, RegisterView, VerifyEmailView
+from user.views import UserViewSet, RegisterView, VerifyEmailView, RequestPasswordResetView, SetNewPasswordView
 from order.views import OrderItemViewSet, OrderViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -48,6 +48,8 @@ urlpatterns = [
     path('api/user/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'post':'create'})),
     path('api/user/register', RegisterView.as_view(), name='register'),
     path('api/user/verification/', VerifyEmailView.as_view(), name="email-verify"),
+    path('api/user/passreset/request', RequestPasswordResetView.as_view(), name='passreset-request'),
+    path('api/user/passreset/setpass/<token>',  SetNewPasswordView.as_view(), name='passreset-setpass'),
 ]
 
 

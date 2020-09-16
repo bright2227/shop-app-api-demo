@@ -95,3 +95,55 @@ class RegisterSerializer(serializers.ModelSerializer):
         model =  get_user_model()
         fields  = ('username', 'password', 'email', 'first_name', 'last_name', 'password_check')
         write_only_fields = ('password', 'password_check')
+
+
+class RequestPasswordResetSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
+    username = serializers.CharField(
+        max_length=68, min_length=4, 
+        required=True
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'username')         
+
+    def create(self, validated_data):
+        try:
+            user = get_user_model().objects.get(email=validated_data['email'], username=validated_data['username'])
+            user.is_active = False
+            user.save()
+        except:
+            raise serializers.ValidationError('email or username is wrong, please check it again')
+
+        RefreshToken.lifetime = datetime.timedelta(minutes=200)
+        token = RefreshToken.for_user(user).access_token            
+
+        current_site = get_current_site(request=self.context['request']).domain
+        relativeLink = reverse('passreset-setpass', kwargs={'token': token})
+        absurl = 'http://' + current_site + relativeLink
+        email_body = 'Hello, \n Use link below to reset your password  \n' + absurl
+
+        send_mail('Password reset mail from shop api',
+            email_body,
+            'bright2227@gmail.com',
+            [validated_data['email']])    
+        return user
+
+
+class SetNewPasswordSerializer(serializers.ModelSerializer):    
+    password = serializers.CharField(
+        max_length=68, min_length=6, 
+        write_only=True,
+        required=True,
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ('password', )  
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance
