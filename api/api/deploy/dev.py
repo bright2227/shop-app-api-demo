@@ -1,4 +1,5 @@
 from api.deploy import secrets
+from api.settings import BASE_DIR
 import os
 
 

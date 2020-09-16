@@ -54,7 +54,7 @@ class OrderItemViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
-    @swagger_auto_schema(operation_description='刪除購物車內的特定物品')       
+    @swagger_auto_schema(operation_summary='刪除購物車內的特定物品')       
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
     
