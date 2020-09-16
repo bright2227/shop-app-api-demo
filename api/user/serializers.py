@@ -9,40 +9,15 @@ from django.shortcuts import render, reverse
 import datetime
 
 
-class UserSignInSerializer(serializers.ModelSerializer):
-    # you habe to use CharField(write_only=True) Only appying write_only_fields 
-    # not works perfectly. something went wrong in to_representaion part
-    password_check = serializers.CharField(write_only=True) 
-
-    def validate_password_check(self, attr):
-        if attr != self.initial_data['password']:
-            raise serializers.ValidationError("Your double password check fails") 
-        return attr
-
-    def create(self, validated_data):
-#         User() = get_user_model()
-        validated_data.pop('password_check')
-        # it is instance, doesn't trigger the sql
-        user = get_user_model()(**validated_data)  
-        user.set_password(validated_data['password'])
-        user.save()
-        # create a order for cart
-        Order.objects.create(user=user, state='CR')
-        return user
-    
-    def update(self, instance, validated_data):
-        validated_data.pop('password_check')
-        if 'password' in validated_data:
-            password = validated_data.pop('password')
-            instance.set_password(password)
-        return super().update(instance, validated_data)
-
+class UserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        max_length=68, min_length=4, 
+        required=True,
+    )  
     class Meta:
         model =  get_user_model()
-        fields  = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'password_check')
-        write_only_fields = ('password', 'password_check')
-        read_only_fields = ('id',)
-        extra_kwargs = {'email': {'read_only': False, 'required': True}}
+        fields  = ('username', 'email', 'first_name', 'last_name',)
+        read_only_fields = ('email',)
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -75,7 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         # create a order for cart
         Order.objects.create(user=user, state='CR')
-
+        # create a jwt token
         RefreshToken.lifetime= datetime.timedelta(minutes=200)
         token = RefreshToken.for_user(user).access_token
 
@@ -145,5 +120,4 @@ class SetNewPasswordSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.set_password(validated_data['password'])
         instance.save()
-
         return instance
