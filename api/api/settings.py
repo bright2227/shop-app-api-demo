@@ -18,7 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # debug_mode from docker-compose is string, env file will be prepared later
-DEBUG = bool(int(os.environ.get('debug_mode')))
+# DEBUG = bool(int(os.environ.get('debug_mode')))
+DEBUG = True
 if DEBUG:
     from api.deploy.dev import *
 else:
@@ -34,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'debug_toolbar',
-    # 'django_extensions',
+    'django_extensions',
     'django_filters',
     'rest_framework',
     'drf_yasg',
@@ -74,6 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
+AUTH_USER_MODEL = "core.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
