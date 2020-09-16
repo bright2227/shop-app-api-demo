@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
-from user.serializers import  UserSignInSerializer, RegisterSerializer, \
+from user.serializers import  UserSerializer, RegisterSerializer, \
      RequestPasswordResetSerializer, SetNewPasswordSerializer
 from django.contrib.auth import get_user_model 
 from django.utils.decorators import method_decorator
@@ -17,52 +17,26 @@ import jwt
 
 class UserViewSet(viewsets.ViewSet):
 
-    def get_permissions(self):
-        if self.action in ('create',):
-            self.permission_classes = [AllowAny]
-        else:
-            self.permission_classes = [IsAuthenticated]
-        return [permission() for permission in self.permission_classes]
+    permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         operation_summary='讀取帳號資料',
-        operation_description='password為hash後的帳號密碼。',
     )     
     def retrieve(self, request, *args, **kwargs):
         instance = self.request.user
-        serializer = UserSignInSerializer(instance)
-        return Response(serializer.data)
+        serializer = UserSerializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     @swagger_auto_schema(
         operation_summary='修改帳號資料',
-        operation_description='password_check應輸入帳號原本的密碼以做確認，password為修改後的密碼。',
-        request_body=UserSignInSerializer
+        request_body=UserSerializer
     )
     def update(self, request, *args, **kwargs):
         instance = self.request.user
-        serializer = UserSignInSerializer(instance, data=request.data)
+        serializer = UserSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
-    
-    @swagger_auto_schema(
-        operation_summary='註冊帳號',
-        operation_description='password_check應輸入和password一樣的值，確認使用者沒有打錯密碼。',
-        request_body=UserSignInSerializer,
-        security=[]
-    )     
-    def create(self, request, *args, **kwargs):
-        serializer = UserSignInSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def get_success_headers(self, data):
-        try:
-            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
-        except (TypeError, KeyError):
-            return {}
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class RegisterView(generics.GenericAPIView):
@@ -115,6 +89,10 @@ class VerifyEmailView(views.APIView):
 class RequestPasswordResetView(generics.GenericAPIView):
     serializer_class = RequestPasswordResetSerializer
 
+    @swagger_auto_schema(
+        operation_summary='請求重設密碼',
+        operation_description='確認帳號和以及對應信箱後，寄出能修改密碼的網址。用戶可在十分鐘內來到該網址修改密碼，十分鐘後該網址作廢。',
+        security=[])    
     def post(self, request):
         serializer = RequestPasswordResetSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
@@ -127,6 +105,10 @@ class RequestPasswordResetView(generics.GenericAPIView):
 class SetNewPasswordView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
+    @swagger_auto_schema(
+        operation_summary='重設密碼網址',
+        operation_description='該網址會在用戶請求重設密碼後寄出，用戶可在十分鐘內來到該網址修改密碼，十分鐘後該網址作廢。',
+        security=[])    
     def patch(self, request, token):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)

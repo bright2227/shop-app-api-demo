@@ -45,7 +45,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView_swagger, name='token_refresh'),
     path('admin/', admin.site.urls),
     path('api/', include((router.urls, "shop_app"), namespace="shop")),
-    path('api/user/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'post':'create'})),
+    path('api/user/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update'})),
     path('api/user/register', RegisterView.as_view(), name='register'),
     path('api/user/verification/', VerifyEmailView.as_view(), name="email-verify"),
     path('api/user/passreset/request', RequestPasswordResetView.as_view(), name='passreset-request'),
