@@ -8,3 +8,6 @@ CACHES_PASSWORD = "yourpassword"
 
 EMAIL_HOST_USER = "youremail@gmail.com"
 EMAIL_HOST_PASSWORD = "youremailpass"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'xxxxxxx'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'xxxxxxx'

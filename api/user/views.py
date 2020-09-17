@@ -20,7 +20,7 @@ class UserViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        operation_summary='讀取帳號資料',
+        operation_summary='讀取個人帳號資料',
     )     
     def retrieve(self, request, *args, **kwargs):
         instance = self.request.user
