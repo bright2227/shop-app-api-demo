@@ -38,11 +38,12 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'rest_framework',
+    'social_django',
+    'social_core',    
     'drf_yasg',
-    'product',
-    'core',
-    'order',
-    'user']
+    'product', 'core',
+    'order', 'user'
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'api.urls'
@@ -68,6 +70,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -120,7 +125,7 @@ INTERNAL_IPS = [
 ]
 
 
-# JWT, Filter
+# JWT, Filter, Session
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework.authentication.BasicAuthentication',
@@ -147,6 +152,35 @@ SWAGGER_SETTINGS = {
     },
     'USE_SESSION_AUTH': True
 }
-
 LOGIN_URL = "api/user/session/login/"
 LOGOUT_URL = "api/user/session/logout/"
+
+
+# Social Oauth
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+#final redirct url,  after google send code to /social-auth/complete/google-oauth2/
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+# key and secrets is imported from secrets
+# SOCIAL_AUTH_FACEBOOK_KEY = 
+# SOCIAL_AUTH_FACEBOOK_SECRET = 
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email'
+}
+
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_GOOGLE_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email'
+}
