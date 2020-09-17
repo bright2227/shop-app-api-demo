@@ -44,17 +44,20 @@ TokenRefreshView_swagger = swagger_auto_schema(method='post',
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # product, order, orderitem
     path('api/', include((router.urls, "shop_app"), namespace="shop")),
-    #user
+    # user
     path('api/user/session/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/user/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update'})),
     path('api/user/register', RegisterView.as_view(), name='register'),
     path('api/user/verification/', VerifyEmailView.as_view(), name="email-verify"),
     path('api/user/passreset/request', RequestPasswordResetView.as_view(), name='passreset-request'),
     path('api/user/passreset/setpass/<token>',  SetNewPasswordView.as_view(), name='passreset-setpass'),
-    #token    
+    # token    
     path('api/token/', TokenObtainPairView_swagger, name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView_swagger, name='token_refresh'),
+    # social-oauth
+    path('social-auth/', include('social_django.urls', namespace='social')),
 ]
 
 
@@ -63,7 +66,9 @@ schema_view = get_schema_view(
    openapi.Info(
       title='Shop API',
       default_version='v1',
-      description='Test description',
+      description='Oauth2.0 social login \n \
+          Google    http://localhost:8000/social-auth/login/google-oauth2/ \n \
+          Facebook  http://localhost:8000/social-auth/login/facebook/',
       contact=openapi.Contact(email='bright2227@gmail.com'),
       license=openapi.License(name='BSD License'),
    ),
