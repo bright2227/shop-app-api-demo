@@ -29,27 +29,32 @@ from drf_yasg import openapi
 # from django.views.static import serve
 # from api.settings import STATIC_ROOT
 
+
 router = DefaultRouter()
 router.register('product', ProductViewSet, basename='product')
 router.register('order', OrderViewSet, basename='order')
 router.register('orderitem', OrderItemViewSet, basename='orderitem')
 
+
 TokenObtainPairView_swagger = swagger_auto_schema(method='post',
     security=[],)(TokenObtainPairView.as_view())
-
 TokenRefreshView_swagger = swagger_auto_schema(method='post',
     security=[],)(TokenRefreshView.as_view())
 
+
 urlpatterns = [
-    path('api/token/', TokenObtainPairView_swagger, name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView_swagger, name='token_refresh'),
     path('admin/', admin.site.urls),
     path('api/', include((router.urls, "shop_app"), namespace="shop")),
+    #user
+    path('api/user/session/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/user/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update'})),
     path('api/user/register', RegisterView.as_view(), name='register'),
     path('api/user/verification/', VerifyEmailView.as_view(), name="email-verify"),
     path('api/user/passreset/request', RequestPasswordResetView.as_view(), name='passreset-request'),
     path('api/user/passreset/setpass/<token>',  SetNewPasswordView.as_view(), name='passreset-setpass'),
+    #token    
+    path('api/token/', TokenObtainPairView_swagger, name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView_swagger, name='token_refresh'),
 ]
 
 
@@ -58,6 +63,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title='Shop API',
       default_version='v1',
+      description='Test description',
       contact=openapi.Contact(email='bright2227@gmail.com'),
       license=openapi.License(name='BSD License'),
    ),
