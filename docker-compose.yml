@@ -20,7 +20,7 @@ services:
       - MYSQL_PASSWORD=password 
     volumes:
       - api_db_vol:/var/lib/mysql:rw 
-      - ./compose/mysql/conf/my.cnf:/etc/mysql/my.conf 
+      - ./compose/mysql/conf/my.cnf:/etc/mysql/my.cnf 
       - ./compose/mysql/init:/docker-entrypoint-initdb.d/ 
     ports:
       - "3306:3306" 
@@ -62,6 +62,9 @@ volumes:
   api_redis_vol: 
   api_media_vol: 
 
-# volume like api_db_vol seems have cache, if api_vol:./api, files with same name
-#  won't change after delete and rebuild container
+# The data in th e volume would be stored in othher place, even someone delete container and
+# image. The new container from new image is still affected by those volume. 
+# Take db as example, the new container can have some table that is established by container
+# that was destoryed before.
+# docker system prune --force --volumes is the  way to remove them.
   

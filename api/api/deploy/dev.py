@@ -10,16 +10,27 @@ SOCIAL_AUTH_FACEBOOK_KEY = secrets.SOCIAL_AUTH_FACEBOOK_KEY
 SOCIAL_AUTH_FACEBOOK_SECRET = secrets.SOCIAL_AUTH_FACEBOOK_SECRET
 
 ALLOWED_HOSTS = ['*']
+SITE_URL = 'http://localhost:80/'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+# # Database
+# # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join( BASE_DIR, 'db.sqlite3'),
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'api', 
+#         'USER': secrets.DATABASE_USER, 
+#         'PASSWORD': secrets.DATABASE_PASSWORD, 
+#         'HOST': 'db', 
+#         'PORT':'3306', 
+#     }
+# }
 
 
 #Cache

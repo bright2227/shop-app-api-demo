@@ -2,21 +2,22 @@ from rest_framework import viewsets, views, generics, mixins, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.settings import api_settings
+from rest_framework_simplejwt.tokens import RefreshToken
 from user.serializers import  UserSerializer, RegisterSerializer, \
      RequestPasswordResetSerializer, SetNewPasswordSerializer
-from django.contrib.auth import get_user_model 
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_cookie
+from django.contrib.auth import get_user_model
+from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from api import settings 
+from rest_framework_simplejwt.tokens import RefreshToken
+import factory
+import json
+import requests
 import jwt
 
 
 class UserViewSet(viewsets.ViewSet):
-
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -60,7 +61,6 @@ class RegisterView(generics.GenericAPIView):
 
 
 class VerifyEmailView(views.APIView):
-    # serializer_class is for swagger, didn't work in the verification
 
     token_param_config = openapi.Parameter(
         'token', in_=openapi.IN_QUERY, description='Description', type=openapi.TYPE_STRING)
@@ -128,3 +128,89 @@ class SetNewPasswordView(generics.GenericAPIView):
         serializer.save()
 
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
+
+
+class AuthGoogle(views.APIView):
+
+    @swagger_auto_schema(
+        operation_summary='google登入',
+        operation_description='第三方登入，返回此api的JWT refresh and access token',
+        security=[])
+    def get(self, request):
+        code = request.GET.get('code')
+        state = request.GET.get('state')
+        if code == None:
+            return Response({'error':'there is no code in url'})
+        if state != 'lOpag66jEav7UINupALP5VBwhx1avuEe':
+            return Response({'error':'Cross-site_request_forgery examination fails'})
+
+        #code exchange access_token and id_token(contain user data)
+        payload = {'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+                   'redirect_uri': settings.SITE_URL+'api/user/social-auth/google-oauth2',
+                   'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+                   'code': code,
+                   'grant_type': 'authorization_code'}
+        r = requests.post('https://oauth2.googleapis.com/token', data=payload)
+        token = json.loads(r.text)
+
+        #resolve id_token to get user data
+        profile = jwt.decode(token['id_token'], verify=False)
+
+        User = get_user_model()
+        print('user finish0')
+        try:
+            user = User.objects.get(email=profile['email'])
+            print('user finish1')
+        except User.DoesNotExist:
+            password = factory.Faker('password', length=30).generate()
+            user = User.objects.create_user(username=profile['email'], email=profile['email'], first_name=profile['given_name'], 
+                                last_name=profile['family_name'], password=password)
+            print('user finish3')
+
+        print('user finish2')
+#       for our app
+        refresh_token = RefreshToken.for_user(user)
+        access_token = RefreshToken.for_user(user).access_token
+        return Response({'access':str(access_token), 'refresh':str(refresh_token)}) 
+
+
+class AuthFacebook(views.APIView):
+
+    @swagger_auto_schema(
+        operation_summary='facebook登入(deprecated)',
+        operation_description='第三方登入，返回此api的JWT refresh and access token \n 需要應用程式審核',
+        security=[])    
+    def get(self, request):
+        code = request.GET.get('code')
+        state = request.GET.get('state')
+        if code == None:
+            return Response({'error':'there is no code in url'})
+        if state != 'EBpm2XAhCLxP6psD0KJQ2wYrBasdsfs7':
+            return Response({'error':'Cross-site_request_forgery examination fails'})
+
+        #code exchange access_token
+        url=f"https://graph.facebook.com/v2.10/oauth/access_token?\
+            client_id={settings.SOCIAL_AUTH_FACEBOOK_KEY}&\
+            redirect_uri={settings.SITE_URL+'api/user/social-auth/facebook'}&\
+            client_secret={settings.SOCIAL_AUTH_FACEBOOK_SECRET}&\
+            code={code}"
+        r = requests.get(url) 
+        token = json.loads(r.text)
+
+        #access_token exchange user data
+        url=f"https://graph.facebook.com/me?fields=id,first_name,last_name,email\
+            &access_token={token['access_token']}"
+        r = requests.get(url)
+        profile = json.loads(r.text)
+                
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=profile['email'])
+        except User.DoesNotExist:
+            password = factory.Faker('password', length=30).generate()
+            user = User.objects.create_user(username=profile['email'], email=profile['email'], first_name=profile['first_name'], 
+                                            last_name=profile['last_name'], password=password)
+#       for our app
+        refresh_token = RefreshToken.for_user(user)
+        access_token = RefreshToken.for_user(user).access_token
+        return Response({'access':str(access_token), 'refresh':str(refresh_token)})

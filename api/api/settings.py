@@ -18,8 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # debug_mode from docker-compose is string, env file will be prepared later
-# DEBUG = bool(int(os.environ.get('debug_mode')))
-DEBUG = True
+DEBUG = bool(int(os.environ.get('debug_mode')))
+# DEBUG = True
 if DEBUG:
     from api.deploy.dev import *
 else:
@@ -35,13 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'debug_toolbar',
-    'django_extensions',
+    # 'social_django', 'social_core',
+    # 'corsheaders',
+    # 'django_extensions', # python manage.py reset_db needs turn this on
+    'core',
     'django_filters',
-    'rest_framework',
-    'social_django',
-    'social_core',    
+    'rest_framework', 
     'drf_yasg',
-    'product', 'core',
+    'product',
     'order', 'user'
     ]
 
@@ -54,8 +55,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 ]
+
+# CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'api.urls'
 
@@ -70,9 +74,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
+                # 'social_django.context_processors.backends',
+                # 'social_django.context_processors.login_redirect',
             ],
         },
     },
