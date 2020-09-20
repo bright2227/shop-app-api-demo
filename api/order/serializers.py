@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.db import transaction
 from core.models import Order, Orderitem, Product
-from order.tasks import send_mail_task
+from order.tasks import send_mail_order
 from django.http import HttpResponse
 # from django.db.models import Prefetch
 
@@ -90,8 +90,8 @@ class OrderCreateSerializer(serializers.Serializer):
             Order.objects.create(user=self.context['request'].user) # can't use bulk_update to update item in foreignkey
             Product.objects.bulk_update(product_update, ['quantity']) 
 
-        # reciept = reciept + f"total bill is {validated_data['total']} \n Thank you for purchasing"
-        # send_mail_task.delay(reciept, orderitem[0].user.username, orderitem[0].user.email)
+        reciept = reciept + f"total bill is {validated_data['total']} \n Thank you for purchasing"
+        send_mail_order.delay(reciept, orderitem[0].user.email)
         return order
 
 

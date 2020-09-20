@@ -1,5 +1,8 @@
-from api.deploy import secrets
-from api.settings import BASE_DIR
+try:
+    from api.deploy import secrets
+except:
+    from api.deploy import secrets_exmaple
+import osfrom api.settings import BASE_DIR
 import os
 
 
@@ -10,7 +13,8 @@ SOCIAL_AUTH_FACEBOOK_KEY = secrets.SOCIAL_AUTH_FACEBOOK_KEY
 SOCIAL_AUTH_FACEBOOK_SECRET = secrets.SOCIAL_AUTH_FACEBOOK_SECRET
 
 ALLOWED_HOSTS = ['*']
-SITE_URL = 'http://localhost:80/'
+# SITE_URL = 'http://localhost:8000/'
+SITE_URL = 'http://localhost/'
 
 
 # # Database

@@ -8,9 +8,9 @@ from user.serializers import  UserSerializer, RegisterSerializer, \
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
+from core.models import Order
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework_simplejwt.tokens import RefreshToken
 import factory
 import json
 import requests
@@ -165,6 +165,7 @@ class AuthGoogle(views.APIView):
             password = factory.Faker('password', length=30).generate()
             user = User.objects.create_user(username=profile['email'], email=profile['email'], first_name=profile['given_name'], 
                                 last_name=profile['family_name'], password=password)
+            Order.objects.create(user=user, state='CR')
             print('user finish3')
 
         print('user finish2')
@@ -210,6 +211,7 @@ class AuthFacebook(views.APIView):
             password = factory.Faker('password', length=30).generate()
             user = User.objects.create_user(username=profile['email'], email=profile['email'], first_name=profile['first_name'], 
                                             last_name=profile['last_name'], password=password)
+            Order.objects.create(user=user, state='CR')
 #       for our app
         refresh_token = RefreshToken.for_user(user)
         access_token = RefreshToken.for_user(user).access_token

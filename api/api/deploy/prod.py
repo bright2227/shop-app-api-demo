@@ -1,4 +1,7 @@
-from api.deploy import secrets
+try:
+    from api.deploy import secrets
+except:
+    from api.deploy import secrets_exmaple
 import os
 
 

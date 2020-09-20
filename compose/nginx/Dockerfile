@@ -11,6 +11,6 @@ RUN rm /etc/nginx/conf.d/default.conf \
 RUN chown -R www-data:www-data /usr/share/nginx/html/media \
 && chmod -R 775 /usr/share/nginx/html/media
  
-ADD ./nginx.conf /etc/nginx/conf.d/
+ADD ./conf/nginx.conf /etc/nginx/conf.d/
  
 CMD ["nginx", "-g", "daemon off;"]

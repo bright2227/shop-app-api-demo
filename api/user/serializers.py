@@ -3,8 +3,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model 
 from django.contrib.sites.shortcuts import get_current_site
 from core.models import Order
-# from user.tasks import send_verified_mail_task
-from django.core.mail import send_mail
+from user.tasks import send_mail_verify, send_mail_passreset
 from django.shortcuts import render, reverse
 import datetime
 
@@ -59,11 +58,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         absurl = 'http://' + current_site + relativeLink + "?token="+str(token)
         email_body = 'Hi ' + user.username + \
             ' Use the link below to active your account and verify your email \n' + absurl
- 
-        send_mail('Verification mail from shop api',
-            email_body,
-            'bright2227@gmail.com',
-            [validated_data['email']])
+
+        send_mail_verify.delay(email_body, validated_data['email'])
+        # send_mail('Verification mail from shop api',
+        #     email_body,
+        #     'bright2227@gmail.com',
+        #     [validated_data['email']])
         return user
 
     class Meta:
@@ -98,11 +98,12 @@ class RequestPasswordResetSerializer(serializers.ModelSerializer):
         relativeLink = reverse('passreset-setpass', kwargs={'token': token})
         absurl = 'http://' + current_site + relativeLink
         email_body = 'Hello, \n Use link below to reset your password  \n' + absurl
-
-        send_mail('Password reset mail from shop api',
-            email_body,
-            'bright2227@gmail.com',
-            [validated_data['email']])    
+        
+        send_mail_passreset.delay(email_body, validated_data['email'])
+        # send_mail('Password reset mail from shop api',
+        #     email_body,
+        #     'bright2227@gmail.com',
+        #     [validated_data['email']])    
         return user
 
 
