@@ -1,6 +1,6 @@
 # shop-app-api-demo
 
-架設於AWS購物車的API，附有swagger文檔。
+架設於AWS購物車的API，以swagger document形式呈現。
 
 目前功能
   - 發信功能 (Celery + Redis + Gmail)
