@@ -80,7 +80,7 @@ schema_view = get_schema_view(
       title='Shop API',
       default_version='v1',
       description=f'Oauth2.0 social login \n Google \n {google_social_login_url} \n \
-        Facebook \n {facebook_social_login_url}',
+        # Facebook \n {facebook_social_login_url}',
       contact=openapi.Contact(email='bright2227@gmail.com'),
       license=openapi.License(name='BSD License'),
    ),

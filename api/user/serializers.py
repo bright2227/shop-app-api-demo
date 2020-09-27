@@ -103,7 +103,7 @@ class RequestPasswordResetSerializer(serializers.ModelSerializer):
         # send_mail('Password reset mail from shop api',
         #     email_body,
         #     'bright2227@gmail.com',
-        #     [validated_data['email']])    
+            # [validated_data['email']])    
         return user
 
 
