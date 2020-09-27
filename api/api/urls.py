@@ -57,7 +57,7 @@ urlpatterns = [
     path('api/user/verification/', VerifyEmailView.as_view(), name="email-verify"),
     path('api/user/passreset/request', RequestPasswordResetView.as_view(), name='passreset-request'),
     path('api/user/passreset/setpass/<token>',  SetNewPasswordView.as_view(), name='passreset-setpass'),
-    path('api/user/social-auth/facebook', AuthFacebook.as_view(), name='social-facebook'),    
+    # path('api/user/social-auth/facebook', AuthFacebook.as_view(), name='social-facebook'),    
     path('api/user/social-auth/google-oauth2', AuthGoogle.as_view(), name='social-google'),    
     # token    
     path('api/token/', TokenObtainPairView_swagger, name='token_obtain_pair'),
@@ -80,7 +80,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title='Shop API',
       default_version='v1',
-      description=f'Oauth2.0 social login \n Google \n {google_social_login_url} \n \
+      description=f'Oauth2.0 social login \n Google \n {google_social_login_url}', 
         # Facebook \n {facebook_social_login_url}',
       contact=openapi.Contact(email='bright2227@gmail.com'),
       license=openapi.License(name='BSD License'),

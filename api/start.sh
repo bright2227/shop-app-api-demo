@@ -1,6 +1,8 @@
 python manage.py collectstatic --noinput&&
 python manage.py makemigrations&&
 python manage.py migrate&&
+
+# celery -A api worker -l info --detach
 uwsgi --ini /var/www/html/api/uwsgi.ini
 
 # uwsgi -d --ini /var/www/html/api/uwsgi.ini

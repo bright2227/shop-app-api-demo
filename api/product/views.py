@@ -20,6 +20,7 @@ class ProductViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
     pagination_class = ProductPagination
     filter_class = ProductFilter
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
@@ -29,13 +30,6 @@ class ProductViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin,
     @method_decorator(cache_page(60*0.5))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
-    
-    def get_permissions(self):
-        if self.action in ('create',):
-            self.permission_classes = [IsAdminUser]
-        else:
-            self.permission_classes = [AllowAny]
-        return [permission() for permission in self.permission_classes]
 
     @swagger_auto_schema(operation_summary='列出所有產品資料',
     operation_description='可以用產品名、價格搜尋符合條件的產品',

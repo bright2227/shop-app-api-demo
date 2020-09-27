@@ -6,6 +6,8 @@ from core.models import Order
 from user.tasks import send_mail_verify, send_mail_passreset
 from django.shortcuts import render, reverse
 import datetime
+from django.core.cache import cache 
+import factory
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -91,19 +93,17 @@ class RequestPasswordResetSerializer(serializers.ModelSerializer):
         except:
             raise serializers.ValidationError('email or username is wrong, please check it again')
 
-        RefreshToken.lifetime = datetime.timedelta(minutes=200)
-        token = RefreshToken.for_user(user).access_token            
+        # RefreshToken.lifetime = datetime.timedelta(minutes=200)
+        # token = RefreshToken.for_user(user).access_token            
+        token = factory.Faker('password', length=40).generate()
+        cache.set(token, user.id, timeout=720)
 
         current_site = get_current_site(request=self.context['request']).domain
         relativeLink = reverse('passreset-setpass', kwargs={'token': token})
         absurl = 'http://' + current_site + relativeLink
         email_body = 'Hello, \n Use link below to reset your password  \n' + absurl
         
-        send_mail_passreset.delay(email_body, validated_data['email'])
-        # send_mail('Password reset mail from shop api',
-        #     email_body,
-        #     'bright2227@gmail.com',
-            # [validated_data['email']])    
+        send_mail_passreset.delay(email_body, validated_data['email']) 
         return user
 
 
@@ -120,5 +120,6 @@ class SetNewPasswordSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.set_password(validated_data['password'])
+        instance.is_active = True
         instance.save()
         return instance

@@ -18,12 +18,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # debug_mode from docker-compose is string, env file will be prepared later
-DEBUG = bool(int(os.environ.get('debug_mode')))
-# DEBUG = True
-if DEBUG:
-    from api.deploy.dev import *
-else:
-    from api.deploy.prod import *
+# DEBUG = bool(int(os.environ.get('debug_mode')))
+DEBUG = True
+from api.deploy.prod import *
+# if DEBUG:
+#     from api.deploy.dev import *
+# else:
+#     from api.deploy.prod import *
     
 
 # Application definition
@@ -161,10 +162,10 @@ LOGOUT_URL = "api/user/session/logout/"
 
 # Social Oauth
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.facebook.FacebookOAuth2',
-    'social_core.backends.github.GithubOAuth2',
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.facebook.FacebookOAuth2',
+    # 'social_core.backends.github.GithubOAuth2',
+    # 'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 #final redirct url,  after google send code to /social-auth/complete/google-oauth2/

@@ -8,9 +8,11 @@ from user.serializers import  UserSerializer, RegisterSerializer, \
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
+from django.core.cache import cache
 from core.models import Order
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.core.cache import cache 
 import factory
 import json
 import requests
@@ -110,16 +112,21 @@ class SetNewPasswordView(generics.GenericAPIView):
         operation_description='該網址會在用戶請求重設密碼後寄出，用戶可在十分鐘內來到該網址修改密碼，十分鐘後該網址作廢。',
         security=[])    
     def patch(self, request, token):
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
+        # try:
+        #     payload = jwt.decode(token, settings.SECRET_KEY)
 
-        except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
+        # except jwt.ExpiredSignatureError as identifier:
+        #     return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
 
-        except jwt.exceptions.DecodeError as identifier:
+        # except jwt.exceptions.DecodeError as identifier:
+        #     return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user_id = cache.get(token)
+        if user_id is None:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
-        instance = get_user_model().objects.get(id=payload['user_id'])
+        # instance = get_user_model().objects.get(id=payload['user_id'])
+        instance = get_user_model().objects.get(id=user_id)
         if instance.is_active != False:
             return Response({'error': 'Password is not reset yet'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -157,18 +164,14 @@ class AuthGoogle(views.APIView):
         profile = jwt.decode(token['id_token'], verify=False)
 
         User = get_user_model()
-        print('user finish0')
         try:
             user = User.objects.get(email=profile['email'])
-            print('user finish1')
         except User.DoesNotExist:
             password = factory.Faker('password', length=30).generate()
             user = User.objects.create_user(username=profile['email'], email=profile['email'], first_name=profile['given_name'], 
                                 last_name=profile['family_name'], password=password)
             Order.objects.create(user=user, state='CR')
-            print('user finish3')
 
-        print('user finish2')
 #       for our app
         refresh_token = RefreshToken.for_user(user)
         access_token = RefreshToken.for_user(user).access_token

@@ -2,8 +2,8 @@ try:
     from api.deploy import secrets
 except:
     from api.deploy import secrets_exmaple
-import osfrom api.settings import BASE_DIR
-import os
+import os 
+from api.settings import BASE_DIR
 
 
 SECRET_KEY = secrets.SECRET_KEY
