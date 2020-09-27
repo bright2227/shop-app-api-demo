@@ -45,6 +45,7 @@ TokenRefreshView_swagger = swagger_auto_schema(method='post',
     operation_summary='更新JWT Token', security=[],)(TokenRefreshView.as_view())
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # product, order, orderitem
