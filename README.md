@@ -23,8 +23,10 @@
  - Docker
  - NGINX
  - AWS
- 
+
+
 使用前置
+
  重要密碼皆在secrets_example.py，密碼修改後將名稱修改為secrets.py，切勿上傳至github。重要密碼除了secrets_example.py外，其以下對應處也需修改:
 
 1.DATABASE_USER, DATABASE_PASSWORD: docker-compose.yml
