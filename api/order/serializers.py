@@ -15,7 +15,7 @@ class OrderitemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orderitem
         fields = ('id', 'item', 'quantity', 'url')
-        read_only_fields = ('id', 'item', 'url')
+        read_only_fields = ('id', 'url')
 
     def validate_item(self, attr):
         # attr is an product objects            
@@ -91,7 +91,7 @@ class OrderCreateSerializer(serializers.Serializer):
             Product.objects.bulk_update(product_update, ['quantity']) 
 
         reciept = reciept + f"total bill is {validated_data['total']} \n Thank you for purchasing"
-        send_mail_order.delay(reciept, orderitem[0].user.email)
+        send_mail_order.delay(reciept, order.user.email)
         return order
 
 

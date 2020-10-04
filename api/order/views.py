@@ -4,6 +4,7 @@ from core.models import Product, Orderitem, Order
 from order.serializers import OrderitemSerializer, OrderCreateSerializer, OrderSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from django.db import transaction
 from drf_yasg.utils import swagger_auto_schema
 
 
@@ -68,7 +69,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         # queryset just for schema generation metadata
             return Order.objects.none() 
 
-        if self.action in ("update", "destroy"):
+        if self.action in ("update", "destroy", "partial_update"):
             queryset = self.queryset.filter(user=self.request.user, state='PR')
             if not queryset:
                 raise ValidationError('There is no order in process state')
@@ -81,6 +82,13 @@ class OrderViewSet(viewsets.ModelViewSet):
             return OrderCreateSerializer
         else:
             return OrderSerializer
+
+    def perform_destroy(self, instance):
+        with transaction.atomic():
+            for orderitem in instance.orderitem_set.all():
+                orderitem.item.quantity += orderitem.quantity
+                orderitem.item.save()
+            instance.delete()
         
     @swagger_auto_schema(operation_summary='列出所有訂單資料，包括購物車',
         operation_description='列出所有使用者曾經下訂的訂單. "CR"(Cart)代表未成單的購物車狀態,\
