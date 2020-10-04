@@ -1,6 +1,5 @@
 # shop-app-api-demo
 
-
 架設於AWS購物車的API，以swagger document形式呈現。
 
 目前功能
@@ -25,3 +24,13 @@
  - NGINX
  - AWS
  
+使用前置
+ 重要密碼皆在secrets_example.py，密碼修改後將名稱修改為secrets.py，切勿上傳至github。重要密碼除了secrets_example.py外，其以下對應處也需修改:
+
+1.DATABASE_USER, DATABASE_PASSWORD: docker-compose.yml
+
+2.CACHES_PASSWORD: compose/redis/redis.conf
+
+3.SOCIAL_AUTH_KEY, SOCIAL_AUTH_SECRET: https://console.developers.google.com/apis, https://developers.facebook.com/
+
+4.EMAIL_HOST_USER, EMAIL_HOST_PASSWORD: https://myaccount.google.com/security
