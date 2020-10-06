@@ -1,8 +1,12 @@
-# shop-app-api-demo
+# **shop-app-api-demo**
 
-架設於AWS購物車的API，以swagger document形式呈現。
+http://ec2-3-112-241-88.ap-northeast-1.compute.amazonaws.com/
 
-目前功能
+ 架設於AWS購物車的API，以swagger document形式呈現。
+ 
+ ![](pic/shopapi.png)
+
+### **目前功能**
   - 發信功能 (Celery + Redis + Gmail)
   - 註冊，發送驗證信，點擊信中地址啟動帳號
   - 請求修改密碼功能，請求後發送修改地址信，點擊信中地址來到修改密碼頁面 
@@ -13,7 +17,7 @@
   - 提交訂單後，發送確認電子郵件給客戶
   - 部署 (AWS + Docker + uWSGI + NGINX)
 
-使用工具:
+### **使用工具**
  - Djangorestframework
    - drf_yasg
    - Celery 
@@ -24,8 +28,42 @@
  - NGINX
  - AWS
 
+### **功能**
 
-使用前置
+ 請求修改密碼
+
+>  1 送出密碼修改請求
+![](pic/reset%20pass.png)
+
+>  2 寄送密碼修改網址至用戶信箱
+![](pic/reset%20pass2.png)
+
+>  3 修改密碼
+![](pic/reset%20pass3.png)
+![](pic/reset%20pass4.png)
+
+>  4 用新密碼請求jwt token
+![](pic/reset%20pass5.png)
+![](pic/reset%20pass6.png)
+
+
+Google第三方登入
+
+![](pic/oauth2%200.png)
+
+![](pic/oauth2.png)
+
+![](pic/oauth2%202.png)
+
+
+訂單功能
+
+![](pic/order.png)
+
+![](pic/order%202.png)
+
+
+## **使用前置**
 
  prod.py中的allowed_host, site_url。
 
