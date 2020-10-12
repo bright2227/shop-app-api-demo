@@ -2,7 +2,7 @@
 
 http://ec2-3-112-241-88.ap-northeast-1.compute.amazonaws.com/
 
- 架設於AWS購物車的API，以swagger document形式呈現。
+ 架設於AWS的購物車API，以swagger document形式呈現。
  
  ![](pic/shopapi.png)
 
