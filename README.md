@@ -18,7 +18,7 @@ http://ec2-3-112-241-88.ap-northeast-1.compute.amazonaws.com/
   - 部署 (AWS + Docker + uWSGI + NGINX)
 
 ### **使用工具**
- - Djangorestframework
+ - Django rest framework
    - drf_yasg
    - Celery 
    - djangorestframework-simplejwt
