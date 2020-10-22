@@ -26,10 +26,8 @@ from django.urls import include, path, re_path
 from drf_yasg.views import get_schema_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-# from django.conf import settings
-# from django.conf.urls.static import static
+from django.conf.urls.static import static
 # from django.views.static import serve
-# from api.settings import STATIC_ROOT
 
 
 router = DefaultRouter()
@@ -108,8 +106,9 @@ urlpatterns += [
 ]
 
 # # Debug tool
-# if settings.DEBUG:
-#     urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #     import debug_toolbar
 #     urlpatterns = urlpatterns + [
 #         path('__debug__/', include(debug_toolbar.urls)),
