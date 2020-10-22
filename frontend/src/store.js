@@ -150,7 +150,6 @@ export default new Vuex.Store({
                     resolve()
                 })
                 .catch(err => {
-                    console.log('ERROR')
                     console.log(err)
                     reject(err) 
                 })

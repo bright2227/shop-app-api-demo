@@ -15,6 +15,8 @@
           <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
           <p class="p3 mb-3 font-weight-normal text-center" v-if="incorrectAuth">login fail</p>
         </form>
+
+        <router-link :to = "{ name:'reset' }" exact id='resetpass'> forget your password? </router-link>
       </div>
     </div>
   </div>
@@ -52,12 +54,16 @@
 <style>
 body { 
   background-color:#f4f4f4;
+  text-align: center;
 }
   .login{
     background-color:#fff;
     margin-top:10%;
   }
+  
   input {
     padding: 25px 10px;
 }
+  
+
 </style>

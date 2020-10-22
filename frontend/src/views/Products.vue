@@ -48,6 +48,7 @@
       getAPI.get('/api/product/',)
       .then(response => {
         this.ProductData = response.data.results
+        // console.log(response)
       })
       .catch(err => {
         console.log(err)

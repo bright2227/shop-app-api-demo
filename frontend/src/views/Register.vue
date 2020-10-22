@@ -10,16 +10,16 @@
             <input type="text" name="username" id="user" v-model="username" class="form-control" placeholder="Username">
           </div>
           <div class="form-group">
-            <input type="password" name="password" id="pass" v-model="password" class="form-control" placeholder="Password">
+            <input type="password" name="password" id="pass" v-model="password" class="form-control" placeholder="Password, at least 6 characters">
           </div>
           <div class="form-group">
             <input type="password" name="password_check"  v-model="password_check" class="form-control" placeholder="Password Double Check">
           </div>   
           <div class="form-group">
-            <input type="first_name" name="first_name"  v-model="first_name" class="form-control" placeholder="first_name">
+            <input type="text" name="first_name"  v-model="first_name" class="form-control" placeholder="first_name">
           </div>
           <div class="form-group">
-            <input type="last_name" name="last_name" v-model="last_name" class="form-control" placeholder="last_name">
+            <input type="text" name="last_name" v-model="last_name" class="form-control" placeholder="last_name">
           </div>
           <div class="form-group">
             <input type="email" name="email"  v-model="email" class="form-control" placeholder="email">

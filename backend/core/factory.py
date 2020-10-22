@@ -30,4 +30,4 @@ class ProductFactory(factory.django.DjangoModelFactory):
 
 # python manage.py shell
 # from core.factory import UserFactory, ProductFactory
-# UserFactory.create_batch(5)
+# ProductFactory.create_batch(5)
