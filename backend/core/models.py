@@ -36,6 +36,7 @@ class Order(models.Model):
     total = models.FloatField(blank=True, null=True)
     address = models.CharField(default='', max_length=40)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
     state = models.CharField(
         max_length=2,
         choices=OrderState.choices,

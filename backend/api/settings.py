@@ -20,8 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # debug_mode from docker-compose is string, env file will be prepared later
 # DEBUG = bool(int(os.environ.get('debug_mode')))
 DEBUG = True
-from api.deploy.prod import *
-# from api.deploy.dev import *
+# from api.deploy.prod import *
+from api.deploy.dev import *
     
 
 # Application definition
@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # 'debug_toolbar',
     # 'social_django', 'social_core',
     'corsheaders',
-    # 'django_extensions', # python manage.py reset_db needs turn this on
+    'django_extensions', # python manage.py reset_db needs turn this on
     'core',
     'django_filters',
     'rest_framework', 

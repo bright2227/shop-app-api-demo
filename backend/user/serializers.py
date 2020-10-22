@@ -58,6 +58,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         current_site = get_current_site(self.context['request']).domain
         relativeLink = reverse('email-verify')
         absurl = 'http://' + current_site + relativeLink + "?token="+str(token)
+        # absurl = 'http://localhost:8080/register?token='+str(token)  #for local frontend test
         email_body = 'Hi ' + user.username + \
             ' Use the link below to active your account and verify your email \n' + absurl
 

@@ -105,6 +105,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('id', 'address', 'total', 'orderitem_set', 'state', 'url')
-        read_only_fields = ('id', 'total', 'orderitem_set', 'state', 'url') 
+        fields = ('id', 'address', 'total', 'orderitem_set', 'state', 'created_date', 'url')
+        read_only_fields = ('id', 'total', 'orderitem_set', 'state', 'created_date', 'url') 
         
