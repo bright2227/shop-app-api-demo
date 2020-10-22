@@ -1,1 +1,0 @@
-for upload static folder to the github
