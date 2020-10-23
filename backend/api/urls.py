@@ -15,7 +15,7 @@ Including another URLconf
 """
 from product.views import ProductViewSet
 from user.views import UserViewSet, RegisterView, VerifyEmailView, \
-    RequestPasswordResetView, SetNewPasswordView, AuthFacebook, AuthGoogle 
+    RequestPasswordResetView, SetNewPasswordView, AuthFacebook, AuthGoogle, AuthGoogle2 
 from order.views import OrderItemViewSet, OrderViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -57,6 +57,7 @@ urlpatterns = [
     path('api/user/passreset/setpass/<token>',  SetNewPasswordView.as_view(), name='passreset-setpass'),
     # path('api/user/social-auth/facebook', AuthFacebook.as_view(), name='social-facebook'),    
     path('api/user/social-auth/google-oauth2', AuthGoogle.as_view(), name='social-google'),    
+    path('api/user/social-auth/google-oauth2-front', AuthGoogle2.as_view(), name='social-google2'),  
     # token    
     path('api/token/', TokenObtainPairView_swagger, name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView_swagger, name='token_refresh'),

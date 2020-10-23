@@ -60,7 +60,6 @@ import { getAPI } from '../axios-api'
     },
 
     created () {
-      console.log(this.$route.query.token)
       if (this.$route.query.token != undefined){
           getAPI.get('/api/user/verification?token='+this.$route.query.token,)
           .then(() => {
@@ -86,12 +85,14 @@ methods: {
           this.inccorrectmsg = 'some field is empty'
         } else if (!reg.test(this.email)){
           this.inccorrectmsg = 'email format wrong'
+        } else if(this.username.length < 4) {
+          this.inccorrectmsg = 'username should have at least 4 characters'
         } else if(this.password.length < 6) {
           this.inccorrectmsg = 'password should have at least 6 characters'
         } else if(this.password != this.password_check) {
           this.inccorrectmsg = 'password double check fail'
         } else {
-          this.$store.dispatch('userRegister', {
+          getAPI.post('/api/user/register', {
           username: this.username,
           password: this.password,
           password_check: this.password_check,
@@ -117,11 +118,7 @@ methods: {
 body { 
   background-color:#f4f4f4;
 }
-  .login{
-    background-color:#fff;
-    margin-top:10%;
-  }
-  input {
+input {
     padding: 25px 10px;
 }
 </style>

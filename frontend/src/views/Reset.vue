@@ -30,7 +30,7 @@
         <h6> {{aftermsg}} </h6>
 
         <div v-if="Resetsuccess">
-          <div class="col text-center" v-if="afterActivate">
+          <div class="col text-center">
             <button type="submit" class="btn btn-default" v-on:click="tologin()"> return to login page</button>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default {
         } else if (this.newpassword != this.password_check){
           this.inccorrectmsg = 'password double check fail'
         } else {
-          getAPI.post('/api/user/passreset/setpass/'+this.$route.params.id,{
+          getAPI.patch('/api/user/passreset/setpass/'+this.$route.params.id,{
           password: this.newpassword
         })
         .then(() => {

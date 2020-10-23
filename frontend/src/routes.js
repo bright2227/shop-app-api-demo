@@ -14,9 +14,9 @@ export default new VueRouter({
     base: process.env.BASE_URL,
     routes: [
         {
-            path: '/reset/:id?',
-            name: 'reset',
-            component: Reset,
+        path: '/reset/:id?',
+        name: 'reset',
+        component: Reset,
         },
         {
         path: '/',

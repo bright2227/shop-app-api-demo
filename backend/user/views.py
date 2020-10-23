@@ -141,7 +141,8 @@ class AuthGoogle(views.APIView):
 
     @swagger_auto_schema(
         operation_summary='google登入',
-        operation_description='第三方登入，返回此api的JWT refresh and access token',
+        operation_description='第三方登入，直接返回此api的JWT refresh and access token，此為展示用。 \
+            如果配合前端，則前端則負責接收google返回的authorization code，接著再向後端輸入authorization code，返回JWT refresh and access token。',
         security=[])
     def get(self, request):
         code = request.GET.get('code')
@@ -159,6 +160,44 @@ class AuthGoogle(views.APIView):
                    'grant_type': 'authorization_code'}
         r = requests.post('https://oauth2.googleapis.com/token', data=payload)
         token = json.loads(r.text)
+
+        #resolve id_token to get user data
+        profile = jwt.decode(token['id_token'], verify=False)
+
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=profile['email'])
+        except User.DoesNotExist:
+            password = factory.Faker('password', length=30).generate()
+            user = User.objects.create_user(username=profile['email'], email=profile['email'], first_name=profile['given_name'], 
+                                last_name=profile['family_name'], password=password)
+            Order.objects.create(user=user, state='CR')
+
+#       for our app
+        refresh_token = RefreshToken.for_user(user)
+        access_token = RefreshToken.for_user(user).access_token
+        return Response({'access':str(access_token), 'refresh':str(refresh_token)}) 
+
+class AuthGoogle2(views.APIView):
+    swagger_schema = None # hide this end point
+
+    def post(self, request):
+
+        code = request.data.get('code', None)
+        print(request.data)
+        if code is None:
+            return Response({'error': 'no code key in the input'}, status=status.HTTP_400_BAD_REQUEST) 
+
+        #code exchange access_token and id_token(contain user data)
+        payload = {'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+                   'redirect_uri': 'http://localhost:8080/login',
+                   'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+                   'code': code,
+                   'grant_type': 'authorization_code'}
+        print(payload)
+        r = requests.post('https://oauth2.googleapis.com/token', data=payload)
+        token = json.loads(r.text)
+        print(token)
 
         #resolve id_token to get user data
         profile = jwt.decode(token['id_token'], verify=False)

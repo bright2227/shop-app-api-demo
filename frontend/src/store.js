@@ -101,7 +101,7 @@ export default new Vuex.Store({
                 })
                 .then(response => {
                     context.commit('saveToken', { access: response.data.access, refresh: response.data.refresh })
-                    getAPIwithToken.get('/api/order/',
+                    getAPIwithToken.get('/api/order',
                     )
                     .then(response => {
                         context.commit('saveCart', response.data)
@@ -120,7 +120,7 @@ export default new Vuex.Store({
 
         userReLogin (context){
             return new Promise((resolve, reject) => {
-                getAPI.post('/api/token/refresh/', {
+                getAPI.post('/api/token/refresh', {
                     refresh: localStorage.getItem('refreshToken')
                 })
                 .then(response => {
@@ -130,32 +130,25 @@ export default new Vuex.Store({
                 .catch(err => {
                     reject(err) 
                 })
-
             })
         },
-
-        userRegister (context, user){
+        
+        googleLogin (context, {code}){
             return new Promise((resolve, reject) => {
-                console.log(user)
-                getAPI.post('/api/user/register', {
-                    username: user.username,
-                    password: user.password,
-                    password_check: user.password_check,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    email: user.email,  
+                getAPI.post('/api/user/social-auth/google-oauth2-front', {
+                    code: code
                 })
-                .then(() => {
-                    console.log(context)
+                .then(response => {
+                    console.log(response)
+                    context.commit('saveToken', { access: response.data.access, refresh: response.data.refresh })
                     resolve()
                 })
                 .catch(err => {
                     console.log(err)
                     reject(err) 
                 })
-
             })
-        },        
+        },
 
         localLoad (context){
             context.commit('loadToken')
