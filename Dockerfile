@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
   
 RUN mkdir -p /var/www/html/api
 WORKDIR /var/www/html/api
-ADD ./api /var/www/html/api
+COPY ./backend /var/www/html/api
  
 RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install -r requirements.txt

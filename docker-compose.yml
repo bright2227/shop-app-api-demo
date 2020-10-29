@@ -31,7 +31,7 @@ services:
     expose:
       - "8000"
     volumes:
-      - ./api:/var/www/html/api
+      - ./backend:/var/www/html/api
       - api_media_vol:/var/www/html/api/media 
       - ./compose/uwsgi:/tmp 
     depends_on: 
@@ -49,7 +49,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./api/static:/usr/share/nginx/html/static
+      - ./backend/static:/usr/share/nginx/html/static
       - ./compose/nginx/ssl:/usr/share/nginx/ssl 
       - ./compose/nginx/conf:/etc/nginx/conf.d
       - ./compose/nginx/log:/var/log/nginx 
@@ -58,6 +58,14 @@ services:
       - web
     restart: always
 
+  frontend:
+    image: node:12-alpine
+    command: npm run serve
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    restart: always
+    
 volumes: 
   api_db_vol: 
   api_redis_vol: 

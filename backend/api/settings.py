@@ -20,8 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # debug_mode from docker-compose is string, env file will be prepared later
 # DEBUG = bool(int(os.environ.get('debug_mode')))
 DEBUG = True
-# from api.deploy.prod import *
-from api.deploy.dev import *
+from api.deploy.prod import *
+# from api.deploy.dev import *
     
 
 # Application definition
@@ -60,6 +60,8 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8080',
     'http://127.0.0.1:8080',
+    'http://localhost:80',
+    'http://127.0.0.1:80',
 )
 
 ROOT_URLCONF = 'api.urls'
