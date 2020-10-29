@@ -30,4 +30,6 @@ class ProductFactory(factory.django.DjangoModelFactory):
 
 # python manage.py shell
 # from core.factory import UserFactory, ProductFactory
-# ProductFactory.create_batch(5)
+def run():
+    if len(Product.objects.all()) == 0:
+        ProductFactory.create_batch(10)
