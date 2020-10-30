@@ -1,7 +1,9 @@
+python manage.py wait_for_db
 python manage.py collectstatic --noinput
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runscript factory
+
 
 celery -A api worker -l info --detach
 uwsgi --ini /var/www/html/api/uwsgi.ini

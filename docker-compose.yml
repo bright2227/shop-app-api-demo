@@ -33,7 +33,9 @@ services:
     volumes:
       - ./backend:/var/www/html/api
       - api_media_vol:/var/www/html/api/media 
-      - ./compose/uwsgi:/tmp 
+      - ./compose/uwsgi:/tmp
+    command: >
+      sh -c "./start.sh"    
     depends_on: 
       - redis
     environment:
