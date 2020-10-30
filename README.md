@@ -1,7 +1,13 @@
 # **shop-app-api-demo**
 
-http://ec2-3-112-241-88.ap-northeast-1.compute.amazonaws.com/
+前端
 
+http://ec2-52-192-225-40.ap-northeast-1.compute.amazonaws.com/
+ ![](pic/shop-app-frontend.png)
+
+後端
+
+http://ec2-52-192-225-40.ap-northeast-1.compute.amazonaws.com/swagger
  架設於AWS的購物車API，以swagger document形式呈現。
  
  ![](pic/shopapi.png)
@@ -18,6 +24,7 @@ http://ec2-3-112-241-88.ap-northeast-1.compute.amazonaws.com/
   - 部署 (AWS + Docker + uWSGI + NGINX)
 
 ### **使用工具**
+ - VueJs
  - Django rest framework
    - drf_yasg
    - Celery 
