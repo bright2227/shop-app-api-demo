@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
@@ -54,7 +55,7 @@ class Order(models.Model):
 
 class Orderitem(models.Model):
     item = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     # status = models.
     def __str__(self):
