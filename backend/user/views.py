@@ -190,7 +190,7 @@ class AuthGoogle2(views.APIView):
 
         #code exchange access_token and id_token(contain user data)
         payload = {'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
-                   'redirect_uri': 'http://localhost:8080/login',
+                   'redirect_uri': settings.SITE_URL+'login',
                    'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
                    'code': code,
                    'grant_type': 'authorization_code'}

@@ -59,15 +59,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         current_site = get_current_site(self.context['request']).domain
         relativeLink = reverse('email-verify')
         # absurl = 'http://' + current_site + relativeLink + "?token="+str(token)
-        absurl = 'http://localhost:8080/register?token='+str(token)  #for local frontend test
+        absurl = 'http://'  + current_site + '/register?token='+str(token)  #for local frontend test
         email_body = 'Hi ' + user.username + \
             ' Use the link below to active your account and verify your email \n' + absurl
 
-        # send_mail_verify.delay(email_body, validated_data['email'])
-        send_mail('Verification mail from shop api',
-            email_body,
-            'bright2227@gmail.com',
-            [validated_data['email']])
+        send_mail_verify.delay(email_body, validated_data['email'])
+        # send_mail('Verification mail from shop api',
+        #     email_body,
+        #     'bright2227@gmail.com',
+        #     [validated_data['email']])
         return user
 
     class Meta:
@@ -103,15 +103,15 @@ class RequestPasswordResetSerializer(serializers.ModelSerializer):
         current_site = get_current_site(request=self.context['request']).domain
         relativeLink = reverse('passreset-setpass', kwargs={'token': token})
         # absurl = 'http://' + current_site + relativeLink
-        absurl = 'http://localhost:8080/reset/'+str(token)  #for local frontend test
+        absurl = 'http://' + current_site + '/reset/'+str(token)  #for local frontend test
 
         email_body = 'Hello, \n Use link below to reset your password  \n' + absurl
         
-        # send_mail_passreset.delay(email_body, validated_data['email'])
-        send_mail('Reset mail from shop api',
-            email_body,
-            'bright2227@gmail.com',
-            [validated_data['email']])         
+        send_mail_passreset.delay(email_body, validated_data['email'])
+        # send_mail('Reset mail from shop api',
+        #     email_body,
+        #     'bright2227@gmail.com',
+        #     [validated_data['email']])         
         return user
 
 
