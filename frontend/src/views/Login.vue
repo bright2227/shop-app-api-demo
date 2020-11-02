@@ -33,7 +33,7 @@
         password: '',
         incorrectAuth: false,
         client_id: '673717759805-6tdf9dpra96brad4vv97q970sds829og.apps.googleusercontent.com',
-        redirect_uri: 'http://localhost:8080/login',
+        redirect_uri: 'http://localhost/login',
         state: '',
         googleoauth2: ''
       }
@@ -65,7 +65,7 @@
           username: this.username,
           password: this.password
         })
-                .then(() => {
+        .then(() => {
           this.$router.push({ name: 'cart' })
         })
         .catch((err) => {

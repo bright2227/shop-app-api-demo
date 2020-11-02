@@ -12,10 +12,16 @@
                 </div>
                 <div class="row" v-for="cart in CartData" :key="cart.id">
                   <div class="col-sm-12 d-flex justify-content-between">
-                    <h5> {{cart.name}} | {{cart.price}} $</h5>
+                    <h5> {{ProductData[cart.item-1]['name']}} | {{ProductData[cart.item-1]['price']}} $</h5> 
                     <h5> {{cart.quantity}} pcs</h5>
                     <button type="button" class="btn btn-light" v-on:click="deleteItem(cart.id)">Delete</button>
                   </div>
+                </div>
+                <div class="col" v-if="CartData.length!=0">
+                  <br>
+                  <p>Please enter the address for this order below: </p>
+                  <input type="text" id="address" name="address" value="" style="width:300px;height:60px"> <br>
+                  <button type="button" class="btn btn-light" v-on:click="formOrder()">Send Order</button>
                 </div>
 
             </div>
@@ -35,22 +41,28 @@
                         <h5 class="card-text text-left">Order state:
                           <span style="float:right;">{{order.state}} </span>
                         </h5>
+                        <h5 class="card-text text-left">Order created_date:
+                          <span style="float:right;">{{order.created_date.slice(0, 16)}} </span>
+                        </h5>                        
                         <h5 class="card-text text-left">Order address:
                           <span style="float:right;">{{order.address}} </span>
                         </h5>
                         <h5 class="card-text text-left">Order total:
                           <span style="float:right;">{{order.total}} </span>
                         </h5>
+                        <br><br>
                     </div>
+                    <br>
+                    
                     <div class="col-md-6 text-left">
                         <h5> Orders Items:</h5>
                         <div v-for="item in order.orderitem_set" :key="item.id">
                           <div class="col-sm-12 d-flex justify-content-between">
-                            <h5> {{ProductData[item.id].name}} | {{ProductData[item.id].price}} $</h5>
+                            <h5> {{ProductData[item.item-1].name}} | {{ProductData[item.item-1].price}} $</h5>
                             <h5>{{item.quantity}} pcs</h5>
-                            <button type="button" class="btn btn-light" v-on:click="deleteItem(item.id)">Delete</button>
                           </div>
                         </div>
+                        <br><br>
                     </div>
               </div>
             </div>
@@ -72,7 +84,7 @@
       return {
           CartData: this.$store.state.cart,
           OrderData: this.$store.state.order,
-          ProductData: {'1':'a'}, // 似乎要觸發變動 ProductData才會顯現，如果只有 {} 那Template也只會出現{}
+          ProductData: null, // 似乎要觸發變動 ProductData才會顯現，如果只有 {} 那Template也只會出現{}
         }
     },
 
@@ -83,8 +95,9 @@
     created () {
       getAPI.get('/api/product/',)
       .then(response => {
-        response.data.results.forEach(ele => (this.ProductData[ele.id]=ele))
-        this.CartData.forEach(ele => this.iteminform(ele))
+        // response.data.results.forEach(ele => (this.ProductData[ele.id]=ele))
+        // this.CartData.forEach(ele => this.iteminform(ele))
+        this.ProductData = response.data.results
       })
       .catch(err => {
         console.log(err)
@@ -105,10 +118,25 @@
       iteminform(ele){
         ele['name'] = this.ProductData[ele.item].name
         ele['price'] = this.ProductData[ele.item].price
+      },
+      formOrder(){
+        var address = document.getElementById("address").value
+        getAPIwithToken.post('/api/order/', {address: address})
+        .then(response => {
+          console.log(response)
+          this.$store.dispatch('userReLogin').then(response => {
+            console.log(response)
+            this.$router.go(0)
+            }).catch(err => {
+            console.log(err)
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
-
     },
-  
+
   }
 </script>
 

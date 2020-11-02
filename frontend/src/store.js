@@ -39,8 +39,9 @@ export default new Vuex.Store({
                 state.cart.forEach(element => cart_set.add(element.item))
                 state.cart_set = cart_set                
             } else{
-                state.cart = cart
-                state.order = order
+                state.cart = []
+                state.order = []
+                state.cart_set = cart_set
             }
         },
         saveToken (state, {access, refresh}){
@@ -120,12 +121,21 @@ export default new Vuex.Store({
 
         userReLogin (context){
             return new Promise((resolve, reject) => {
-                getAPI.post('/api/token/refresh', {
+                getAPI.post('/api/token/refresh/', {
                     refresh: localStorage.getItem('refreshToken')
                 })
                 .then(response => {
                     context.commit('saveToken', { access: response.data.access, refresh: null })
-                    resolve()
+                    getAPIwithToken.get('/api/order',
+                    )
+                    .then(response => {
+                        context.commit('saveCart', response.data)
+                        resolve()        
+                    })        
+                    .catch(err => {
+                        console.log(err) 
+                        reject() 
+                    })
                 })
                 .catch(err => {
                     reject(err) 
@@ -139,9 +149,17 @@ export default new Vuex.Store({
                     code: code
                 })
                 .then(response => {
-                    console.log(response)
                     context.commit('saveToken', { access: response.data.access, refresh: response.data.refresh })
-                    resolve()
+                    getAPIwithToken.get('/api/order',
+                    )
+                    .then(response => {
+                        context.commit('saveCart', response.data)
+                        resolve()        
+                    })        
+                    .catch(err => {
+                        console.log(err) 
+                        reject() 
+                    })
                 })
                 .catch(err => {
                     console.log(err)

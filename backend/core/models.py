@@ -59,4 +59,4 @@ class Orderitem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     # status = models.
     def __str__(self):
-            return str(self.order.id)+' '+str(self.item)+' '+str(self.quantity)
+            return str(self.order.id)+' '+str(self.item)+' '+str(self.quantity) + 'pcs'

@@ -9,4 +9,5 @@ python manage.py runscript factory
 # uwsgi --ini /var/www/html/api/uwsgi.ini
 
 uwsgi -d --ini /var/www/html/api/uwsgi.ini
+# uwsgi --ini /var/www/html/api/uwsgi.ini
 celery -A api worker -l info

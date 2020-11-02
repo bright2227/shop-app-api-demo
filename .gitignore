@@ -12,7 +12,8 @@ secrets.py
 api/static/*
 !*api/static/readme.txt
 
-# api/media/
+*.json.gz
+*.json
 
 # exclude everything
 api/core/migrations/*
