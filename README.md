@@ -37,6 +37,11 @@ http://ec2-52-192-225-40.ap-northeast-1.compute.amazonaws.com/swagger
 
 ### **功能**
 
+swagger中，部分api需要authorization才可使用，這類api右側都帶有鎖符號。 先去/token/裡，輸入username, password可得accessc, refresh token。
+點擊頁面右上角 Authorize按鈕，輸入 "Bear " + 剛剛獲得的access token 如下圖，即可使用需要authorization的api。
+![](pic/autorised.png)
+
+
  請求修改密碼
 
 >  1 送出密碼修改請求
