@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
+# from django.db.models.signals import post_save
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
+
 
 class User(AbstractUser):
     email = models.EmailField(
@@ -13,9 +13,10 @@ class User(AbstractUser):
         unique=True,
         blank=False,
     )
-    
+
     class Meta(AbstractUser.Meta):
         pass
+
 
 class Product(models.Model):
     name = models.CharField(max_length=20)
@@ -26,7 +27,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    
+
 class OrderState(models.TextChoices):
     cart = 'CR', _('Cart')
     order = 'PR', _('Process')
@@ -42,11 +43,11 @@ class Order(models.Model):
         max_length=2,
         choices=OrderState.choices,
         default=OrderState.cart,)
-    order_items = models.ManyToManyField(Product, through="Orderitem") 
-    
+    order_items = models.ManyToManyField(Product, through="Orderitem")
+
     def __str__(self):
-        return str(self.user.username)+' '+ str(self.total)+' '+ str(self.state)
-    
+        return str(self.user.username) + ' ' + str(self.total) + ' ' + str(self.state)
+
 # def create_order_as_cart(sender, created, instance, **kwargs):
 #     if created:
 #         order = Order.objects.create(user=instance)
@@ -58,5 +59,6 @@ class Orderitem(models.Model):
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     # status = models.
+
     def __str__(self):
-            return str(self.order.id)+' '+str(self.item)+' '+str(self.quantity) + 'pcs'
+        return str(self.order.id) + ' ' + str(self.item) + ' ' + str(self.quantity) + 'pcs'

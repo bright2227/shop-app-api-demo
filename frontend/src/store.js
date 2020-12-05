@@ -9,7 +9,6 @@ export default new Vuex.Store({
         accessTokenExp: null,
         refreshTokenExp: null,
         islocalload: false,
-        someData: '',
         cart: null,
         cart_set: null,
         order: null

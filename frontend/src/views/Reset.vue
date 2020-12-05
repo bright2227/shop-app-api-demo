@@ -61,7 +61,6 @@ export default {
   },
 
   created () {
-    console.log(this.$route.params.id)
     if (this.$route.params.id != undefined){
       this.Request = false
       this.Resetpass = true

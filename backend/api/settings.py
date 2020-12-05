@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 from api.deploy.prod import *
 # from api.deploy.dev import *
-    
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -32,13 +33,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'debug_toolbar',
-    # 'social_django', 'social_core',
+    # 'debug_toolbar', 'social_django', 'social_core',
     'corsheaders',
-    'django_extensions', # python manage.py reset_db needs turn this on
+    'django_extensions',  # python manage.py reset_db needs turn this on
     'core',
     'django_filters',
-    'rest_framework', 
+    'rest_framework',
     'drf_yasg',
     'product',
     'order', 'user'
@@ -140,23 +140,22 @@ REST_FRAMEWORK = {
         ),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend', ),
 }
-from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 
-#swagger
+# swagger
 SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
+    'USE_SESSION_AUTH': True,
+    'SECURITY_DEFINITIONS': {
         'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
-            'in': 'header'
+            'in': 'header',
         }
     },
-    'USE_SESSION_AUTH': True
 }
 LOGIN_URL = "api/user/session/login/"
 LOGOUT_URL = "api/user/session/logout/"
@@ -170,22 +169,23 @@ AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
-#final redirct url,  after google send code to /social-auth/complete/google-oauth2/
+# final redirct url, after google send code to
+# /social-auth/complete/google-oauth2/
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # key and secrets is imported from secrets
-# SOCIAL_AUTH_FACEBOOK_KEY = 
-# SOCIAL_AUTH_FACEBOOK_SECRET = 
+# SOCIAL_AUTH_FACEBOOK_KEY =
+# SOCIAL_AUTH_FACEBOOK_SECRET =
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email'
 }
 
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET =
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
 SOCIAL_AUTH_GOOGLE_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email'

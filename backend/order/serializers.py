@@ -2,15 +2,15 @@ from rest_framework import serializers
 from django.db import transaction
 from core.models import Order, Orderitem, Product
 from order.tasks import send_mail_order
-from django.http import HttpResponse
 # from django.db.models import Prefetch
 
 
 class OrderitemSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
-            view_name='shop:orderitem-detail',
-            lookup_field='pk') 
+        view_name='shop:orderitem-detail',
+        lookup_field='pk'
+    )
 
     class Meta:
         model = Orderitem
@@ -18,13 +18,13 @@ class OrderitemSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'url')
 
     def validate_item(self, attr):
-        # attr is an product objects            
+        # attr is an product objects
         if attr.quantity < int(self.initial_data['quantity']):
             raise serializers.ValidationError('Item quantity is larger than product quantity')
         return attr
-              
+
     def create(self, validated_data):
-        validated_data['order']=Order.objects.get(user=self.context['request'].user, state='CR')
+        validated_data['order'] = Order.objects.get(user=self.context['request'].user, state='CR')
         item = Orderitem.objects.create(**validated_data)
         return item
 
@@ -40,25 +40,25 @@ class OrderCreateSerializer(serializers.Serializer):
     address = serializers.CharField()
 
     def validate_address(self, attr):
-        if len(attr)==0:
+        if len(attr) == 0:
             raise serializers.ValidationError("address can't be empty")
         return attr
 
     def create(self, validated_data):
-        # after selected_related, orderitem.values('id'), orderitem.values_list('id'), orderitem.get(id=id)  
+        # after selected_related, orderitem.values('id'), orderitem.values_list('id'), orderitem.get(id=id)
         # still request data from sql
 
         order = Order.objects.get(user=self.context['request'].user, state='CR')
         orderitem = Orderitem.objects.filter(order=order).select_related('item')
         if not orderitem:
-            raise serializers.ValidationError("nothing in the cart") 
+            raise serializers.ValidationError("nothing in the cart")
 
         # still trigger user foreign key in order model even using 'defer', 'only'
         # pref = Prefetch('order_items', queryset=Orderitem.objects.all().select_related('item'))
         # order = Order.objects.prefetch_related(pref).get(user=self.context['request'].user, state='CR')
-            
+
         out_of_stock, too_many_orderitem, reciept = '', '', ''
-        validated_data['total'] =  0
+        validated_data['total'] = 0
         product_update = []
         for itm in orderitem:
 
@@ -76,7 +76,6 @@ class OrderCreateSerializer(serializers.Serializer):
             reciept = reciept + f"{itm.item.name} has {itm.quantity} pcs\n"
             validated_data['total'] += itm.quantity * itm.item.price
 
-
         # handle quantity problem
         if (out_of_stock + too_many_orderitem != ''):
             raise serializers.ValidationError(out_of_stock + too_many_orderitem)
@@ -87,8 +86,8 @@ class OrderCreateSerializer(serializers.Serializer):
             order.address = validated_data['address']
             order.state = 'PR'
             order.save()
-            Order.objects.create(user=self.context['request'].user) # can't use bulk_update to update item in foreignkey
-            Product.objects.bulk_update(product_update, ['quantity']) 
+            Order.objects.create(user=self.context['request'].user)  # can't use bulk_update to update item in foreignkey
+            Product.objects.bulk_update(product_update, ['quantity'])
 
         reciept = reciept + f"total bill is {validated_data['total']} \n Thank you for purchasing"
         send_mail_order.delay(reciept, order.user.email)
@@ -99,12 +98,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
             view_name='shop:order-detail',
-            lookup_field='pk')  
-            
+            lookup_field='pk')
+
     orderitem_set = OrderitemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
         fields = ('id', 'address', 'total', 'orderitem_set', 'state', 'created_date', 'url')
-        read_only_fields = ('id', 'total', 'orderitem_set', 'state', 'created_date', 'url') 
-        
+        read_only_fields = ('id', 'total', 'orderitem_set', 'state', 'created_date', 'url')

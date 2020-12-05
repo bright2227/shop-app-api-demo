@@ -17,7 +17,8 @@
           <p class="p3 mb-3 font-weight-normal text-center" v-if="incorrectAuth">login fail</p>
         </form>
         
-        <router-link :to = "{ name:'reset' }" exact> forget your password? </router-link>
+        <router-link :to = "{ name:'reset' }" exact> forget your password? </router-link><br>
+        <router-link :to = "{ name:'register' }" exact> or create your account? </router-link>
       </div>
     </div>
   </div>

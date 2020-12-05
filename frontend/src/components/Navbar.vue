@@ -28,7 +28,7 @@
           </ul>
         </div>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-if="!isLogin">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <router-link :to = "{ name:'login' }" exact>Login</router-link>
@@ -40,6 +40,14 @@
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <router-link :to = "{name:'register'}" exact>Register</router-link>
+            </li>
+          </ul>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-if="isLogin">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <router-link :to = "{name:'logout'}" exact>Logout</router-link>
             </li>
           </ul>
         </div>
@@ -58,10 +66,7 @@
       }
     },
     created () {
-      // console.log(this.$store.state.cart)
-      this.isLogin = (this.$store.state.cart != null)
-      // console.log(this.isLogin)
-
+      this.isLogin = (this.$store.state.accessTokenExp != null)
     },    
   }
 </script>

@@ -5,18 +5,20 @@ secrets.py
 *__pycache__
 *.pyc
 
+
 # uwsgi ini
 --ini
 
 #static files
-api/static/*
-!*api/static/readme.txt
+backend/static/
 
+#frontend modules cache
+frontend/node_modules/.cache/babel-loader/
+frontend/node_modules/.cache/vue-loader/
 *.json.gz
-*.json
+
 
 # exclude everything
-api/core/migrations/*
-
+backend/core/migrations/
 # exception to the rule
-!api/core/migrations/__init__.py
+!backend/core/migrations/__init__.py

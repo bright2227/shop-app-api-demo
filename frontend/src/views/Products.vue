@@ -45,7 +45,6 @@
     },
 
     created () {
-      console.log(this.$store.state.cart)
       getAPI.get('/api/product/',)
       .then(response => {
         this.ProductData = response.data.results
@@ -67,7 +66,7 @@
         }
       },
       addtoCart(id, quantity){
-        if (!this.$store.state.cart){
+        if (!this.$store.getters.isValidaccess){
           this.$router.push({ name: 'login' })
 
         }else if (!this.$store.state.cart_set.has(id)){
@@ -94,7 +93,6 @@
           console.log(response)
           var orderitemindex = this.$store.state.cart.findIndex(x => x.id == response.data.id)
           this.$store.state.cart[orderitemindex].quantity = response.data.quantity
-          console.log(this.$store.state.cart)
           document.getElementById(id).value  = 1
           document.getElementById(id+'sign').innerHTML = 'change request amount'
         })

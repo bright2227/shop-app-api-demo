@@ -2,7 +2,7 @@ try:
     from api.deploy import secrets
 except:
     from api.deploy import secrets_example
-import os 
+import os
 from api.settings import BASE_DIR
 
 
@@ -22,17 +22,17 @@ SITE_URL = 'http://localhost/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join( BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'api', 
-#         'USER': secrets.DATABASE_USER, 
-#         'PASSWORD': secrets.DATABASE_PASSWORD, 
-#         'HOST': 'db', 
-#         'PORT':'3306', 
+#         'NAME': 'api',
+#         'USER': secrets.DATABASE_USER,
+#         'PASSWORD': secrets.DATABASE_PASSWORD,
+#         'HOST': 'db',
+#         'PORT':'3306',
 #     }
 # }
 
@@ -42,16 +42,16 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join( BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
 
-#Cache
+# Cache
 # CACHES = {
 #     "default": {
 #         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/0", 
+#         "LOCATION": "redis://127.0.0.1:6379/0",
 #         "OPTIONS": {
 #             "CLIENT_CLASS": "django_redis.client.DefaultClient",
 #         },
@@ -71,7 +71,7 @@ task_soft_time_limit = 10 * 60
 # beat_scheduler = "django_celery_beat.schedulers:DatabaseScheduler"
 
 
-#email
+# email
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = secrets.EMAIL_HOST_USER

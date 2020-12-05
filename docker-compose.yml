@@ -38,6 +38,7 @@ services:
       sh -c "./start.sh"    
     depends_on: 
       - redis
+      - db
     environment:
       - debug_mode=0
       - DJANGO_SETTINGS_MODULE=api.settings

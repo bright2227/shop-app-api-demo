@@ -4,7 +4,6 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from core.models import Order, Orderitem, Product
-from order.serializers import OrderCreateSerializer
 import time
 
 
@@ -15,19 +14,24 @@ class PrivateOrderCreateTest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        
-        self.user = get_user_model().objects.create(username='testname',
-             password='testpass', email = 'wofopa7788@trufilth.com')
+
+        self.user = get_user_model().objects.create(
+            username='testname',
+            password='testpass',
+            email='wofopa7788@trufilth.com'
+        )
         self.order = Order.objects.create(user=self.user)
-        
-        self.user2 = get_user_model().objects.create(username='testname2',
-             password='testpass2')
+
+        self.user2 = get_user_model().objects.create(
+            username='testname2',
+            password='testpass2'
+        )
         self.order2 = Order.objects.create(user=self.user2)
-        
+
         self.client.force_authenticate(self.user)
 
     def test_create_order_nothing_in_cart(self):
-        res = self.client.post(ORDER_URL, {"address": "somewhere"})        
+        res = self.client.post(ORDER_URL, {"address": "somewhere"})
         self.assertIn(b'nothing in the cart', res.content)
 
     def test_create_order_zero_product_quantity(self):
@@ -55,4 +59,3 @@ class PrivateOrderCreateTest(TestCase):
         print(time.time()-start_time)
 
         self.assertEqual(status.HTTP_201_CREATED, res.status_code)
-
