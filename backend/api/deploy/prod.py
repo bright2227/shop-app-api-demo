@@ -1,7 +1,7 @@
 try:
     from api.deploy import secrets
 except:
-    from api.deploy import secrets_example
+    from api.deploy import secrets_example as secrets
 import os
 
 

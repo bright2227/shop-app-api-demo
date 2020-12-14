@@ -68,8 +68,8 @@
       addtoCart(id, quantity){
         if (!this.$store.getters.isValidaccess){
           this.$router.push({ name: 'login' })
-
         }else if (!this.$store.state.cart_set.has(id)){
+
           quantity = document.getElementById(id).value
           getAPIwithToken.post('/api/orderitem/', {item: id, quantity: quantity})
         .then(response => {
@@ -88,11 +88,11 @@
           var orderitemid = this.$store.state.cart.find(function(ele){
               return ele.item == id;          
           }).id
+
           getAPIwithToken.patch('/api/orderitem/'+orderitemid+'/', {quantity: quantity})
         .then((response) => {
-          console.log(response)
-          var orderitemindex = this.$store.state.cart.findIndex(x => x.id == response.data.id)
-          this.$store.state.cart[orderitemindex].quantity = response.data.quantity
+          var index = this.$store.state.cart.findIndex(x => x.id == response.data.id)
+          this.$store.state.cart[index].quantity = response.data.quantity
           document.getElementById(id).value  = 1
           document.getElementById(id+'sign').innerHTML = 'change request amount'
         })
