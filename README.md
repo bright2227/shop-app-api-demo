@@ -60,7 +60,7 @@ swagger中，部分api需要authorization才可使用，這類api右側都帶有
 
 Google第三方登入
 
-![](pic/oauth2.gif)
+![](pic/ouath2.gif)
 
 
 訂單功能
