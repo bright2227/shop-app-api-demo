@@ -53,9 +53,8 @@ Google第三方登入
 
 訂單功能
 
-![](pic/order.png)
+![](pic/order.gif)
 
-![](pic/order%202.png)
 
 ## **使用前置**
 
