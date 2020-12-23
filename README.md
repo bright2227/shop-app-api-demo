@@ -48,7 +48,7 @@ swagger中，部分api需要authorization才可使用，這類api右側都帶有
 
 **Google第三方登入**
  
-通常現成的package功能較多，但也比較複雜，有時也不能銜接自己的user model，個人選擇自己建立。 
+通常現成的package功能較多，但也比較複雜，有時也不能銜接自己的user model，目前選擇自行建立。 
 
 1.一開始先準備和google api註冊redirect_uri，得到client_id, client_secrets。 
 
