@@ -43,19 +43,7 @@ swagger中，部分api需要authorization才可使用，這類api右側都帶有
 
  請求修改密碼
 
->  1 送出密碼修改請求
-![](pic/reset%20pass.png)
-
->  2 寄送密碼修改網址至用戶信箱
-![](pic/reset%20pass2.png)
-
->  3 修改密碼
-![](pic/reset%20pass3.png)
-![](pic/reset%20pass4.png)
-
->  4 用新密碼請求jwt token
-![](pic/reset%20pass5.png)
-![](pic/reset%20pass6.png)
+![](pic/reset3.gif)
 
 
 Google第三方登入
