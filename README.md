@@ -67,7 +67,7 @@ Google第三方登入
 
 ![](pic/order.png)
 
-![](pic/order%2.png)
+![](pic/order%202.png)
 
 ## **使用前置**
 
