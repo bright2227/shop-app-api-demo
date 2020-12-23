@@ -58,9 +58,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         token = RefreshToken.for_user(user).access_token
 
         current_site = get_current_site(self.context['request']).domain
+
         # relativeLink = reverse('email-verify')
-        # absurl = 'http://' + current_site + relativeLink + "?token="+str(token)
-        absurl = 'http://' + current_site + '/register?token='+str(token)  # for local frontend test
+        # absurl = 'https://' + current_site + relativeLink + "?token="+str(token)
+        absurl = 'https://' + current_site + '/register?token='+str(token)  # for local frontend test
         email_body = 'Hi ' + user.username + \
             ' Use the link below to active your account and verify your email \n' + absurl
 
@@ -105,8 +106,8 @@ class RequestPasswordResetSerializer(serializers.ModelSerializer):
 
         current_site = get_current_site(request=self.context['request']).domain
         # relativeLink = reverse('passreset-setpass', kwargs={'token': token})
-        # absurl = 'http://' + current_site + relativeLink
-        absurl = 'http://' + current_site + '/reset/'+str(token)  # for local frontend test
+        # absurl = 'https://' + current_site + relativeLink
+        absurl = 'https://' + current_site + '/reset/'+str(token)  # for local frontend test
 
         email_body = 'Hello, \n Use link below to reset your password  \n' + absurl
 

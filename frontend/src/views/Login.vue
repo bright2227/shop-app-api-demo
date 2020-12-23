@@ -34,7 +34,7 @@
         password: '',
         incorrectAuth: false,
         client_id: '673717759805-6tdf9dpra96brad4vv97q970sds829og.apps.googleusercontent.com',
-        redirect_uri: 'http://localhost/login',
+        redirect_uri: window.location.href,
         state: '',
         googleoauth2: ''
       }

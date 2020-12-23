@@ -51,6 +51,14 @@
           </ul>
         </div>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a href="https://github.com/bright2227/shop-app-api-demo">Code</a>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </nav>
   </div>
