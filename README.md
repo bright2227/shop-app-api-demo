@@ -2,12 +2,11 @@
 
 前端
 
-http://ec2-52-192-225-40.ap-northeast-1.compute.amazonaws.com/
+https://www.djangoshopdemo.net/
  ![](pic/shop-app-frontend.png)
 
 後端
-
-http://ec2-52-192-225-40.ap-northeast-1.compute.amazonaws.com/swagger
+https://www.djangoshopdemo.net/swagger
  架設於AWS的購物車API，以swagger document形式呈現。
  
  ![](pic/shopapi.png)
