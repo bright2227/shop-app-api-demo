@@ -13,8 +13,8 @@ https://www.djangoshopdemo.net/swagger
 
 ### **目前功能**
   - 發信功能 (Celery + Redis + Gmail)
-  - 註冊，發送驗證信，點擊信中地址啟動帳號
-  - 請求修改密碼功能，請求後發送修改地址信，點擊信中地址來到修改密碼頁面 
+  - 註冊，發送驗證信，點擊信中網址啟動帳號
+  - 請求修改密碼功能，請求後發送修改網址信，點擊信中網址來到修改密碼頁面 
   - google社群登入
   - 產品搜尋以及分頁
   - JWT驗證 (djangorestframework-simplejwt)
@@ -36,27 +36,24 @@ https://www.djangoshopdemo.net/swagger
 
 ### **功能**
 
-swagger中，部分api需要authorization才可使用，這類api右側都帶有鎖符號。 先去/token/裡，輸入username, password可得accessc, refresh token。
-點擊頁面右上角 Authorize按鈕，輸入 "Bearer " + 剛剛獲得的access token 如下圖，即可使用需要authorization的api。
-![](pic/authorization2.gif)
+**註冊和登入**
 
-**請求修改密碼**
- 
-輸入帳號名、該帳號註冊的email地址，即送出到密碼重置信。信中地址回傳修改密碼的token至前端，之後會一併和用戶修改後的密碼一起送出給後端。在此使用後端的介面，直接輸入token和密碼。
+輸入用戶資訊，送出請求後，後端會送出驗證信，用戶點擊信中網址便能註冊成功。信中網址會以query string帶著token轉至前端頁面，前端頁面取下query string中的token送往後端驗證。
+最後在/token/裡，輸入username, password可得access, refresh token。
 
-![](pic/reset3.gif)
+![](pic/register.gif)
 
 **Google第三方登入**
  
-通常現成的package功能較多，但也比較複雜，有時也不能銜接自己的user model，目前選擇自行建立。 
+通常現成的package功能較多，但也比較複雜，有時也不能銜接自己的user model，目前選擇自行建立。最後返回access, refresh token。
 
 1.一開始先準備和google api註冊redirect_uri，得到client_id, client_secrets。 
 
 2.在前端放著google登入口的連結，連結以query string方式加上client_id, redirect_uri...等參數，用戶點擊時頁面會轉到google登入口。 
 
-3.在用戶完成登入時，google會將auth_code為主的參數以GET加上query string方式回傳到步驟1.的redirect_uri地址。 
+3.在用戶完成登入時，google會將auth_code為主的參數以GET加上query string方式回傳到步驟1.的redirect_uri網址。 
 
-4.在該redirect_uri地址的前端取出query string中的auth_code，以回傳至後端。 
+4.在該redirect_uri網址的前端取出query string中的auth_code，以回傳至後端。 
 
 5.後端將auth_code以及步驟1.得到的client_secrets等參數以POST方式傳至google。
 
@@ -65,6 +62,18 @@ swagger中，部分api需要authorization才可使用，這類api右側都帶有
 7.後端儲存並搜尋用戶資料，回傳jwt token給前端，用戶可以使用jwt token的權限。
 
 ![](pic/ouath2.gif)
+
+**授權**
+
+swagger中，部分api需要authorization才可使用，這類api右側都帶有鎖符號。 先去/token/裡，輸入username, password可得access, refresh token。
+點擊頁面右上角 Authorize按鈕，輸入 "Bearer " + 剛剛獲得的access token如下圖，即可使用需要authorization的api。
+![](pic/authorization2.gif)
+
+**請求修改密碼**
+ 
+輸入帳號名、該帳號註冊的email，即送出到密碼重置信。信中網址回傳修改密碼的token至前端，之後會一併和用戶修改後的密碼一起送出給後端。在此使用後端的介面，直接輸入token和密碼。
+
+![](pic/reset3.gif)
 
 **訂單功能**
 
