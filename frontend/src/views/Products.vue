@@ -4,20 +4,20 @@
       <div class="album py-5 bg-light">
           <div class="container">
             <div class="row">
-              <div v-for="product in ProductData" :key="product.id" class="col-md-4">
+              <div v-for="(product, index) in ProductData" :key="index" class="col-md-4">
                 <div class="card mb-4 box-shadow">
                   <img class="card-img-top" :src="product.image" alt="Card image cap">
                   <div class="card-body text-center">
                       <h5 class="card-text"> {{product.name}} | {{product.price}} $</h5><br>
                       <div class="d-flex justify-content-center align-items-center">
-                        <button type="button" class="btn btn-light" v-on:click="decreaseQuantity(product.id)"> - </button>
-                        <input type="number" :id="product.id" class="form-control input-number" value="1" min="1" :max="product.quantity">
-                        <button type="button" class="btn btn-light" v-on:click="addQuantity(product.id, product.quantity)"> + </button>
+                        <button type="button" class="btn btn-light" v-on:click="decreaseQuantity(index)"> - </button>
+                        <input type="number" v-model="ProductQuantiy[index]" class="form-control input-number" min="0" :max="product.quantity">
+                        <button type="button" class="btn btn-light" v-on:click="addQuantity(index)"> + </button>
                       </div>
                       <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary" v-on:click="addtoCart(product.id)"> add to cart </button>
+                        <button type="button" class="btn btn-primary" v-on:click="addtoCart(index)"> add to cart </button>
                       </div>
-                      <small class="card-text" :id="product.id+'sign'"></small>
+                      <small class="card-text" >{{ProductMessage[index]}}</small>
                   </div>
                 </div>
               </div>
@@ -36,7 +36,9 @@
 
     data () {
       return {
-          ProductData: []
+          ProductData: [],
+          ProductQuantiy: [],
+          ProductMessage: []
         }
     },
   
@@ -48,6 +50,8 @@
       getAPI.get('/api/product/',)
       .then(response => {
         this.ProductData = response.data.results
+        this.ProductQuantiy = Array(this.ProductData.length).fill(0)
+        this.ProductMessage = Array(this.ProductData.length).fill('')
       })
       .catch(err => {
         console.log(err)
@@ -55,50 +59,48 @@
     },
 
     methods: {
-      addQuantity(id, max){
-        if (document.getElementById(id).value < max){
-          document.getElementById(id).value ++
+      addQuantity(index){
+        if (this.ProductQuantiy[index] < this.ProductData[index].quantity){
+          this.ProductQuantiy.splice(index, index+1, this.ProductQuantiy[index]+1)  //vue can't watch over Array[index] = quantity
         }
       },
-      decreaseQuantity(id){
-        if (document.getElementById(id).value > 1){
-          document.getElementById(id).value --
+      decreaseQuantity(index){
+        if (this.ProductQuantiy[index] > 0){
+          this.ProductQuantiy.splice(index, index+1, this.ProductQuantiy[index]-1)
         }
       },
-      addtoCart(id, quantity){
+      addtoCart(index){
+        var id = this.ProductData[index].id
+        var quantity = this.ProductQuantiy[index]
+
         if (!this.$store.getters.isValidaccess){
           this.$router.push({ name: 'login' })
         }else if (!this.$store.state.cart_set.has(id)){
 
-          quantity = document.getElementById(id).value
           getAPIwithToken.post('/api/orderitem/', {item: id, quantity: quantity})
         .then(response => {
           this.$store.state.cart.push(response.data)
           this.$store.state.cart_set.add(id)
-          document.getElementById(id).value  = 1
-          document.getElementById(id+'sign').innerHTML = 'buy success'
+          this.ProductQuantiy.splice(index, index+1, 0)
+          this.ProductMessage.splice(index, index+1, 'buy success')
         })
         .catch(err => {
           console.log(err)
-          document.getElementById(id+'sign').innerHTML = 'bad request'
+          this.ProductMessage.splice(index, index+1, 'bad request')
         })
-
         }else{
-          quantity = document.getElementById(id).value
-          var orderitemid = this.$store.state.cart.find(function(ele){
-              return ele.item == id;          
-          }).id
+          let cart_index = this.$store.state.cart.findIndex(x => x.item == id)
+          let orderitemid = this.$store.state.cart[cart_index].id
 
-          getAPIwithToken.patch('/api/orderitem/'+orderitemid+'/', {quantity: quantity})
+          getAPIwithToken.patch(`/api/orderitem/${orderitemid}/`, {quantity: quantity})
         .then((response) => {
-          var index = this.$store.state.cart.findIndex(x => x.id == response.data.id)
-          this.$store.state.cart[index].quantity = response.data.quantity
-          document.getElementById(id).value  = 1
-          document.getElementById(id+'sign').innerHTML = 'change request amount'
+          this.$store.state.cart[cart_index].quantity = response.data.quantity
+          this.ProductQuantiy.splice(index, index+1, 0)
+          this.ProductMessage.splice(index, index+1, 'change request amount')
         })
         .catch(err => {
           console.log(err)
-          document.getElementById(id+'sign').innerHTML = 'bad request'
+          this.ProductMessage.splice(index, index+1, 'bad request')
         })
         }
       },

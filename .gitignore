@@ -22,3 +22,4 @@ frontend/node_modules/.cache/vue-loader/
 backend/core/migrations/
 # exception to the rule
 !backend/core/migrations/__init__.py
+© 2021 GitHub, Inc.

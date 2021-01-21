@@ -137,7 +137,7 @@ export default new Vuex.Store({
                     })
                 })
                 .catch(err => {
-                    reject(err) 
+                    reject() 
                 })
             })
         },
@@ -162,7 +162,7 @@ export default new Vuex.Store({
                 })
                 .catch(err => {
                     console.log(err)
-                    reject(err) 
+                    reject() 
                 })
             })
         },
